@@ -1,6 +1,6 @@
 ---
 name: code-review-adversarial-reviewer
-description: Adversarial red-team reviewer that cold-reads a diff AFTER Stage 2 reviewers (quality, convention, test, security, performance) have already run — for the code-review skill's Deep-scope Stage 3. Receives Stage 2's merged findings as input and finds what THEY missed: unstated assumptions, failure modes under load, race conditions, deploy/rollback hazards, Hyrum's-Law leakage, cross-module coupling, observability gaps. Does NOT repeat Stage 2 findings. Does NOT rewrite the code. Returns 0-5 sharp findings in the shared JSON schema with verbatim evidence. Read-only. Dispatched only on Deep scope, or when the user explicitly requests adversarial review.
+description: "Adversarial red-team reviewer that cold-reads a diff AFTER Stage 2 reviewers (quality, convention, test, security, performance) have already run — for the code-review skill's Deep-scope Stage 3. Receives Stage 2's merged findings as input and finds what THEY missed: unstated assumptions, failure modes under load, race conditions, deploy/rollback hazards, Hyrum's-Law leakage, cross-module coupling, observability gaps. Does NOT repeat Stage 2 findings. Does NOT rewrite the code. Returns 0-5 sharp findings in the shared JSON schema with verbatim evidence. Read-only. Dispatched only on Deep scope, or when the user explicitly requests adversarial review."
 model: sonnet
 effort: high
 tools: Read, Grep, Glob, Bash
