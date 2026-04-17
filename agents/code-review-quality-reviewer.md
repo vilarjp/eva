@@ -1,6 +1,6 @@
 ---
 name: code-review-quality-reviewer
-description: Reviews code quality in a diff across five axes — correctness, readability, architecture fit, security-adjacent risks, performance-adjacent risks — for the code-review skill's Stage 2 parallel fan-out. Focuses on real defects the author should fix before merge: bugs, null-deref, off-by-one, dead code, overly complex branching, unclear naming that causes confusion, duplication of existing helpers, missed error paths. Does NOT cover security depth, performance depth, test coverage, convention drift, or plan alignment — those are other lanes. Returns findings in the shared JSON schema with verbatim evidence, severity, confidence, and minimal suggested fixes. Read-only.
+description: "Reviews code quality in a diff across five axes — correctness, readability, architecture fit, security-adjacent risks, performance-adjacent risks — for the code-review skill's Stage 2 parallel fan-out. Focuses on real defects the author should fix before merge: bugs, null-deref, off-by-one, dead code, overly complex branching, unclear naming that causes confusion, duplication of existing helpers, missed error paths. Does NOT cover security depth, performance depth, test coverage, convention drift, or plan alignment — those are other lanes. Returns findings in the shared JSON schema with verbatim evidence, severity, confidence, and minimal suggested fixes. Read-only."
 model: sonnet
 effort: high
 tools: Read, Grep, Glob, Bash
