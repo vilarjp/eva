@@ -1,0 +1,17 @@
+{
+  "name": "eva",
+  "metadata": {
+    "description": "Eight composable, scope-adaptive Claude Code skills for compound engineering — plan, diagnose, execute, review, ship, and remember."
+  },
+  "owner": {
+    "name": "João Vilar",
+    "url": "https://github.com/vilarjp"
+  },
+  "plugins": [
+    {
+      "name": "eva",
+      "source": "./",
+      "description": "Eight composable, scope-adaptive Claude Code skills for compound engineering — plan, diagnose, execute, review, ship, and remember."
+    }
+  ]
+}

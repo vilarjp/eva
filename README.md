@@ -12,7 +12,8 @@ plan, diagnose, execute, review, ship, and remember.**
 </div>
 
 ```
-/plugin install github.com/vilarjp/eva
+/plugin marketplace add vilarjp/eva
+/plugin install eva@eva
 ```
 
 ---
@@ -330,8 +331,9 @@ Additional invariants for `solutions`:
 ### As a plugin (recommended)
 
 ```bash
-# From Claude Code
-/plugin install github.com/vilarjp/eva
+# From Claude Code — add the marketplace, then install
+/plugin marketplace add vilarjp/eva
+/plugin install eva@eva
 ```
 
 Or clone and symlink into `~/.claude/plugins/`:
