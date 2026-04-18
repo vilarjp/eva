@@ -30,6 +30,7 @@ Do NOT trigger for: vague problem framing (that's `prd`), granular task breakdow
 7. **Run the adversarial red-team pass before the self-review checklist.** Skipping it is a protocol violation.
 8. **Emit the self-review checklist to the user** before writing. Skipping it is a protocol violation.
 9. **HARD GATE: do not write SPEC.md until the user approves the proposed direction AND the output path.**
+10. **Spec-vs-implementation: the SPEC is a contract to interpret, not code to paste.** Code blocks longer than ~15 lines are almost always bloat — replace them with a behavioural description + table + invariants, or cut them. Detailed rule, fix patterns, and before/after in `references/anti-bloat.md`.
 
 ## Pre-flight (MANDATORY)
 
@@ -114,7 +115,7 @@ Ground the SPEC. Match depth to scope:
 2. *Topic + pattern scan.* Grep for relevant terms. Read the primary module(s) likely touched. Skim one or two adjacent examples covering similar behavior or a similar pattern.
 3. *Interface map.* Identify the public interfaces, schemas, and error shapes at module boundaries that the SPEC will touch or extend.
 
-**Deep:** Standard + map the full module boundaries likely to be affected, list the interfaces and their current shape, and locate prior-art SPECs or ADRs in `docs/` to match voice and format.
+**Deep:** Standard + map the full module boundaries likely to be affected, list the interfaces and their current shape, and locate prior-art SPECs or ADRs in `docs/` to match voice and format. Deep scope **fans out the pre-scan into 3–5 parallel `Explore` agent calls** in a single message — one for the target module(s), one for each distinct consumer surface the change is likely to touch, and one for shared utilities / schemas / middleware that the change will cross. Each call runs at `medium` thoroughness with a self-contained prompt (state the SPEC topic, the specific area to map, and what to report back). Sequential exploration on Deep is a protocol violation — the latency cost is real and the single-threaded pre-scan routinely misses a consumer that the fan-out catches. Merge the returned summaries into the Grounding summary below, attributing each bullet to the lane it came from.
 
 After scanning, produce a short **Grounding summary** (3-10 bullets). Every factual claim that ends up in the SPEC must trace back to a file read here. Claims that cannot be verified must be labeled `(unverified)` in the SPEC.
 
@@ -276,6 +277,8 @@ Before writing, emit this checklist with `✓` or `✗` on each line.
 - [ ] API contracts specify inputs, outputs, error shape, idempotency, and backwards-compat
 - [ ] Module boundaries list created/modified/absorbed with responsibilities
 - [ ] Tracer-bullet phases describe capabilities and acceptance criteria; **no** file or function names
+- [ ] No code block exceeds ~15 lines; every interface / data-type expressed as responsibility table + invariants, not full signatures (spec-vs-implementation test — see `references/anti-bloat.md`)
+- [ ] Worked-example paragraphs have been replaced with acceptance criteria an implementer must make true
 - [ ] Test strategy names levels and cites prior-art tests
 - [ ] Risks table exists and names real concerns (not "bugs")
 - [ ] Adversarial red-team pass emitted; material issues addressed or logged as Open Questions
@@ -348,6 +351,9 @@ Do NOT invoke any implementation skill. Do NOT start coding. The skill is comple
 - You manufactured alternatives inside a mini-ADR to satisfy the template
 - All mini-ADRs end "stick with current approach" and name no real loss
 - A tracer-bullet phase names a file or function
+- A code block longer than ~15 lines appears in Phase 4/5/6 (you documented implementation, not a contract)
+- An interface is spelled out as a full method signature list instead of a responsibility table
+- A worked-example paragraph substitutes for acceptance criteria
 - Non-Goals is empty or tautological ("we will not build a bad product")
 - A risk is "bugs" or "unexpected issues"
 - You skipped the Phase 9 red-team
@@ -360,3 +366,4 @@ Do NOT invoke any implementation skill. Do NOT start coding. The skill is comple
 - `templates/SPEC.md` — the output template. Read only at Phase 12.
 - `references/scope-tiers.md` — detailed Lightweight / Standard / Deep rubric with re-classification rules.
 - `references/section-guides.md` — how-to for each SPEC section (good/bad examples for Goals, ADRs, Data Model, API Contracts, Tracer-bullet Phases, Risks, Not-Doing). Load when a section is underperforming the self-review checklist.
+- `references/anti-bloat.md` — the spec-vs-implementation test, the three common violators (function signatures, data-model literals, worked examples), and before/after fixes. Load when any section drafts longer than ~15 lines of code or reads like pseudo-implementation.

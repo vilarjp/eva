@@ -247,10 +247,11 @@ For each comment in `Comment[]`, produce a triage record. Single-lane — not mu
 2. **Anchor to current code.** If `is_outdated == true` OR `line == null`, mark `anchor_stale: true`; use `diff_hunk` + `original_line` to identify the original context, then text-search the current tree for the hunk snippet. If re-anchoring succeeds, record the new `file:line` and add `re_anchored_from`; if not, the record keeps the original anchor and lists under Residual Risks.
 3. **Cross-reference spec.** If a plan file defines an invariant, requirement, or ADR that touches the comment's concern, locate a 5-30-word quote.
 4. **Cross-reference prior CODE-REVIEW.md.** If any `prior_self_findings[i].fingerprint` matches, record `corroborates_finding: "F-N"` (agreement) or `contradicts_finding: "F-N"` (tension — prior self-review took the opposite stance).
-5. **Classify.** Apply the five-bucket rubric from `references/taxonomy.md`. Each bucket has explicit signals and confidence factors.
-6. **Score confidence (0-100)** per the factors in `references/taxonomy.md`. Floor 50, ceiling 100.
-7. **Draft the copy-pasteable GitHub reply.** Tone varies by bucket (see `references/taxonomy.md`). Cite `file:line` or spec § where relevant. Exactly the message the author should post as a thread reply — no "[author]" placeholders.
-8. **Build the handoff record** for `/execute` FIX mode, populated ONLY for `must-fix` verdicts (and the rare `push-back-with-counterfix` case):
+5. **YAGNI check (conditional).** If the comment asks to *professionalize*, *abstract*, *extract a helper*, *make reusable*, *generalize*, *add for future use*, or *plan for* a surface the diff introduces, `Grep` the current tree for concrete callers of the target symbol or module. If zero real callers exist and the reviewer names no concrete near-term consumer, bias toward **push-back** and cite YAGNI in the reply — speculative abstraction is a carrying cost, not a feature. If the reviewer names a concrete consumer in the same codebase, proceed to classify normally. This check never overrides a concrete bug, security, or spec-invariant concern — it applies only when the ask is speculative scaffolding dressed up as a must-fix.
+6. **Classify.** Apply the five-bucket rubric from `references/taxonomy.md`. Each bucket has explicit signals and confidence factors.
+7. **Score confidence (0-100)** per the factors in `references/taxonomy.md`. Floor 50, ceiling 100.
+8. **Draft the copy-pasteable GitHub reply.** Tone varies by bucket (see `references/taxonomy.md`). Cite `file:line` or spec § where relevant. Exactly the message the author should post as a thread reply — no "[author]" placeholders. Reply drafts MUST NOT contain any of the forbidden performative phrases in `references/taxonomy.md` § "Forbidden performative phrases" — regenerate if one slips in.
+9. **Build the handoff record** for `/execute` FIX mode, populated ONLY for `must-fix` verdicts (and the rare `push-back-with-counterfix` case):
 
 ```
 {
@@ -311,6 +312,8 @@ Before Gate, emit with `✓` or `✗` on each line:
 - [ ] Reconciliation with prior CODE-REVIEW.md completed (if file exists), tension listed even when agreement dominates
 - [ ] Low-confidence verdicts moved to Suppressed (not dropped); must-fix exception applied
 - [ ] Copy-pasteable replies don't scold on nice-to-have / praise; don't grovel on push-back
+- [ ] Reply drafts contain none of the forbidden performative phrases (`references/taxonomy.md` § "Forbidden performative phrases")
+- [ ] YAGNI check applied to any reviewer ask for abstraction / reuse / generalization; speculative asks biased toward push-back
 - [ ] No code was edited, staged, committed, or pushed by the skill
 - [ ] No PR comment was posted by the skill
 - [ ] `CODE-REVIEW.md` / plan docs were read-only
@@ -393,6 +396,8 @@ Do NOT invoke `/execute`. Do NOT `gh pr comment`. Do NOT commit. The skill is co
 - **Filling all five buckets to look thorough.** Empty buckets are fine — write "(none)" and move on.
 - **Running sub-agents for the triage.** Single-lane. Parallel dispatch duplicates context for no gain.
 - **Paraphrasing a comment into "the reviewer said X".** Verbatim quote or suppress.
+- **Agreeing with "professionalize this" / "extract a helper" / "make this reusable" without checking callers.** Speculative abstraction has a cost. Run the YAGNI check; if no concrete consumer exists in the current tree, push-back is the honest verdict.
+- **Opening replies with "You're absolutely right" / "Great point" / "Thanks for catching this".** Performative. Regenerate. See `references/taxonomy.md` § "Forbidden performative phrases".
 
 ## Red flags — self-check
 
@@ -411,6 +416,8 @@ STOP if you catch yourself doing any of these:
 - You invoked `/execute` automatically after writing.
 - Your artifact has 0 must-fix AND 0 push-back AND 0 already-done on a `CHANGES_REQUESTED` PR — likely under-triaged.
 - Your must-fix count exceeds the reviewer's actual comment count — likely over-classified.
+- A reply draft opens with *"You're absolutely right"*, *"Great point"*, *"Thanks for catching this"*, or any other phrase on the forbidden list in `references/taxonomy.md` — regenerate before writing.
+- You classified a "professionalize X" / "abstract this" / "make reusable" comment as must-fix without grepping for concrete callers — run the YAGNI check first.
 
 ## References
 

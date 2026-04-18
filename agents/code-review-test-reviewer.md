@@ -64,6 +64,50 @@ The orchestrator passes:
 - For every `throw` or error return in the diff's production code, is there a test that asserts it fires?
 - For every `try/catch` in the diff's production code, is there a test that exercises the catch path?
 
+## Five named anti-patterns (cite by name in findings)
+
+The category signals above are the raw material. Before emitting a finding, map it to one of the five canonical anti-patterns below when it fits — citing the name makes the finding easier to review, argue against, and remember.
+
+### 1. Mock-behaviour assertion
+
+The test asserts on what the mock returned — which the test itself configured — not on what the production code produced. Every refactor that changes the production code leaves this test green, because the test is round-tripping its own fixture.
+
+*Signal.* `expect(result).toEqual(mockReturn)` where `mockReturn` is the same literal the mock was configured to return; spy assertions on internal calls whose arguments are already constants; snapshot tests of fully mocked responses.
+
+*Fix shape.* Assert on observable output (return value, DOM state, emitted event, persisted row) that depends on the production code's behaviour — not on the shape the mock already dictated.
+
+### 2. Test-only production methods
+
+A production class or module exposes a method, property, flag, or getter whose only caller is the test suite. The API grows to accommodate the test, and the real contract drifts.
+
+*Signal.* Exported names of the form `_forTesting*`, `__internal*`, `resetForTests`, `getInternalState`, `overrideNow`; `public` members no production consumer uses; a parameter (often the last) defaulted to a production value and only passed by tests.
+
+*Fix shape.* Test the public contract via its real entry point. If the test genuinely cannot set up state through the public contract, the refactor is to restructure the production seam — not to expose the internal.
+
+### 3. Mocking without understanding
+
+The author replaces a collaborator with a mock whose behaviour does not match the real collaborator's behaviour. The test passes against an incorrect contract, and the production failure is invisible.
+
+*Signal.* A mock that always resolves (real collaborator can reject / time out / return `null`); a mock that ignores arguments the real implementation uses as a discriminator; a mock for an external HTTP call whose response shape is guessed, not copied from a real response log; a library mocked with a function that has a different signature than the library.
+
+*Fix shape.* Copy the real contract — either from the library's type definitions, a recorded real response, or an integration test — and make the mock conform. When in doubt, prefer a contract test or a fake that the collaborator's owner maintains.
+
+### 4. Incomplete mocks
+
+The mock implements the one method the test happens to call and nothing else. The code under test works today; tomorrow's refactor calls a second method on the same collaborator and the test blows up in a way that does not name the problem.
+
+*Signal.* `jest.fn()` / `vi.fn()` returning `undefined` for methods the production code may call on any branch; a mocked object with three methods, only one defined; `as unknown as CollaboratorType` casts hiding missing members.
+
+*Fix shape.* Either mock the full interface (with the unused methods stubbed to a loud throw that names itself), or use a test double library that auto-stubs with loud defaults. A mock that throws `"unexpected call to .dispose()"` is strictly better than one that returns `undefined` and silently breaks a later assertion.
+
+### 5. Tests-as-afterthought
+
+The tests were written after the production code, match the production code's current behaviour (including any bugs), and are structured to pass rather than to pin the intended contract. The diff signals this by adding both files in the same commit with the test passing on the first run.
+
+*Signal.* Commit history shows the test file appearing strictly after the production file (`git log --oneline --diff-filter=A -- <test-file>` vs the production file); the tests assert on values that only happen to be correct (e.g., hard-coded `"Hello, world"` because that is what the function returns today); no RED proof was ever captured; the tests read like a restatement of the implementation rather than a statement of the contract.
+
+*Fix shape.* For bug-fix tests, ask for the RED proof (the failing run before the fix) — without it, the test does not prove the fix. For feature tests, ask for one acceptance criterion the test pins that the implementation does not trivially satisfy. Flag as a P2 observation unless the diff is a bug fix with no RED proof (then P1).
+
 ## Depth by tier
 
 - **Lightweight**: 0-5 findings typical. Obvious coverage gaps on the diff's new code. Skip TDD analysis.
@@ -113,5 +157,7 @@ The JSON block MUST conform to `skills/code-review/references/findings-schema.md
 A good test-review finding makes the author say *"I knew that test wasn't really covering that branch."* A bad one makes them say *"that test has been there for two years and isn't even in my diff."*
 
 If the diff has no tests and the production change is non-trivial, that is a **P1** (at minimum) — not a hand-wave. Say specifically what behavior is untested and what the minimum test would look like.
+
+If a finding matches one of the five named anti-patterns (mock-behaviour assertion / test-only production methods / mocking without understanding / incomplete mocks / tests-as-afterthought), cite the name in the finding's `title` or `intent` so the author recognises the class at a glance.
 
 If the tests in the diff are actually good, say so in `positives`. Authors need that feedback too.

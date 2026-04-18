@@ -168,3 +168,21 @@ Across all buckets:
 - Do not add "Thanks for the review!" to every reply — it becomes noise. Use it once in a top-level response to the review body if at all.
 - Do not include "[reviewer's name]" placeholders — replies are posted as thread replies; GitHub resolves attribution.
 - For must-fix with a known commit that will fix it: commit to a timeline ("will land in next push", "pushing now") only if you know the author actually intends to. Otherwise say "will update when it lands."
+
+## Forbidden performative phrases
+
+A reply draft must communicate what the author will do (or won't do) and why — it is not a forum for praising the reviewer or performing agreement. The following phrases and their close variants **never** appear in a generated reply. They read as insincere at best and sycophantic at worst, and they displace the one line that actually answers the comment.
+
+| Forbidden phrase (and close variants) | Why it's forbidden | What to write instead |
+|---|---|---|
+| *"You're absolutely right"* · *"You're 100% right"* · *"Totally right"* · *"Great catch"* · *"Excellent point"* · *"Fantastic feedback"* | Praises the reviewer instead of answering. Performs agreement rather than demonstrating it. | State the concrete action: *"Fixed — routed retries through `rateLimiter.acquire()` at `src/http/retry.ts:48`."* |
+| *"Thanks for the review"* (in a per-comment reply) · *"Thanks for catching this"* · *"Appreciate the thorough review"* · *"Thanks so much"* | Noise per-comment. Gratitude openers dilute the reply and imply the reviewer needs reassurance. | Use `"Thanks — "` at most **once**, in a single top-level response to the review body, not on individual threads. Most per-thread replies need no thanks at all. |
+| *"Good point"* · *"Fair point"* · *"That makes sense"* (as an opener) | Ceremony; adds zero information. The reviewer already knows their point is a point. | Skip the opener. Lead with the answer: *"Agreed — SPEC §3.2 specifies this ordering. Adding the inline comment now."* |
+| *"I really appreciate …"* · *"I'm so glad you brought this up"* | Emotional performance. Reviewers are doing their job; the reply is not a thank-you card. | Delete. If genuine warmth is warranted (a reviewer went far beyond scope), one sentence at the top of the review-body response covers it. |
+| *"Sorry for the confusion"* · *"Apologies for …"* · *"My bad"* (when explaining a design, not an actual mistake) | Unnecessary apology for a deliberate choice — signals the design is indefensible even when it isn't. | For push-back, **defend the choice**. For must-fix, **state the fix**. Apologise only for real mistakes (e.g. a committed secret), and make the apology one line. |
+| *"I hope this makes sense"* · *"Let me know if this doesn't answer your question"* · *"Happy to discuss further if you have questions"* (as a boilerplate tail) | Filler tail. If the reply is clear, it doesn't need a hedge; if it isn't, the hedge doesn't fix it. | Drop the tail. The reviewer can reply if they disagree — that is what the thread is for. |
+| *"I'll take a look and get back to you"* (on a must-fix) · *"Let me think about this"* | Vague. A must-fix reply needs a specific action or a specific acknowledgement with a timeline. | *"Fixing — will update this thread when the commit lands."* |
+
+A reply containing any of these phrases **must** be regenerated before being put in the artifact. The rule is mechanical, not stylistic: even if the phrase "fits" in isolation, its presence signals the draft was optimising for politeness over information.
+
+Exception: when the user's repo has an explicit reviewer-etiquette convention (e.g. `CONTRIBUTING.md` mandates "lead with thanks"), honour it. Otherwise, default to the list above.
