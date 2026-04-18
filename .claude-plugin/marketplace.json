@@ -1,7 +1,7 @@
 {
   "name": "eva",
   "metadata": {
-    "description": "Eight composable, scope-adaptive Claude Code skills for compound engineering — plan, diagnose, execute, review, ship, and remember."
+    "description": "Ten composable, scope-adaptive Claude Code skills for compound engineering — teardown, plan, diagnose, execute, review, triage PR feedback, ship, and remember."
   },
   "owner": {
     "name": "João Vilar",
@@ -11,7 +11,7 @@
     {
       "name": "eva",
       "source": "./",
-      "description": "Eight composable, scope-adaptive Claude Code skills for compound engineering — plan, diagnose, execute, review, ship, and remember."
+      "description": "Ten composable, scope-adaptive Claude Code skills for compound engineering — teardown, plan, diagnose, execute, review, triage PR feedback, ship, and remember."
     }
   ]
 }
