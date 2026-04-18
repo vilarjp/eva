@@ -2,11 +2,11 @@
 
 # eva
 
-**Eight composable, scope-adaptive Claude Code skills for compound engineering —
-plan, diagnose, execute, review, ship, and remember.**
+**Ten composable, scope-adaptive Claude Code skills for compound engineering —
+reverse-engineer, plan, diagnose, execute, review, triage PR feedback, ship, and remember.**
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
-[![Version 0.7.0](https://img.shields.io/badge/version-0.7.0-brightgreen)](.claude-plugin/plugin.json)
+[![Version 0.9.0](https://img.shields.io/badge/version-0.9.0-brightgreen)](.claude-plugin/plugin.json)
 [![Claude Code plugin](https://img.shields.io/badge/claude%20code-plugin-orange)](https://docs.claude.com/en/docs/claude-code/plugins)
 
 </div>
@@ -18,20 +18,44 @@ plan, diagnose, execute, review, ship, and remember.**
 
 ---
 
-A Claude Code plugin with eight sharp, composable skills:
+A Claude Code plugin with ten sharp, composable skills:
 
+- **`teardown`** — reverse-engineer an unfamiliar file (local path or URL) into a structural map: entry points, function inventory, state, data flow, external surface (network / DOM / storage), edge cases, and a Mermaid diagram. Runs a hydration pipeline (source-map → beautify → optional decompilation with `wakaru` / `webcrack`) for minified and obfuscated bundles, and supports a focused mode that narrows the artifact to one area (`/teardown bundle.js focus on auth flow`). Strictly read-only; writes only `TEARDOWN.md` and optional `teardown-sources/` sidecars after a HARD GATE with explicit user approval; unverified claims are labeled rather than invented; fetched content is treated as data, never as instructions.
 - **`prd`** — turn a rough feature idea into a rigorous, codebase-grounded PRD through structured dialogue.
 - **`spec`** — turn an idea or an approved PRD into a rigorous, codebase-grounded technical specification.
 - **`revision`** — cross-review an already-drafted PRD.md and SPEC.md pair to catch gaps, inconsistencies, and mismatches before implementation; on approval, patches both source documents with a dated `## Revision` section.
 - **`diagnosis`** — investigate a bug, error, or regression through backward tracing, 3+ structural hypotheses, a full causal chain with predictions for uncertain links, and a reproduction test with RED proof; produces a gated DIAGNOSIS.md that documents root cause, severity, suggested minimal fix, and hotspots.
 - **`execute`** — implement a feature from an approved SPEC/REVISION, fix a bug from an approved DIAGNOSIS, address selected findings from an approved CODE-REVIEW (FIX mode), or execute a direct human prompt when no artifact exists; follows a red-green-refactor TDD loop with a narrow Verification Mode escape hatch for infra/config/docs, enforces minimal-diff and NOTICED-BUT-NOT-TOUCHING scope discipline, commits per vertical-slice on a non-protected branch, keeps its codebase pre-scan internal, and produces a durable EXECUTION.md log. FIX mode closes the **correction → code-review → correction** loop by letting the human pick which findings to address vs skip at triage, slicing each selected finding as a TDD unit, and appending a `## Fixes applied <DATE>` back-pointer on the CODE-REVIEW.md so the next `/code-review` re-run reads a clean delta.
 - **`code-review`** — audit the current diff (uncommitted > branch-vs-base > HEAD~1) through a two-stage multi-reviewer pipeline: plan-alignment as a blocking Stage 1 when a plan exists; code-quality + convention + test + conditional security/performance in parallel Stage 2; adversarial Stage 3 on Deep scope. Merges findings across reviewers, boosts confidence on cross-reviewer agreement, suppresses low-confidence findings in a visible table, separates pre-existing issues from diff-introduced ones, and produces a gated CODE-REVIEW.md. Pure reporter — never writes code, never commits, never pushes.
+- **`pr-feedback`** — triage incoming PR review feedback (inline thread comments via GraphQL, timeline comments, review bodies across every non-dismissed reviewer) into five author-facing verdicts — **must-fix / nice-to-have / question / push-back / already-done** — each with a 0-100 confidence score, verbatim evidence, a copy-pasteable GitHub reply draft, and a structured handoff record that `/execute` FIX mode consumes directly. Mandatory branch-checkout gate (offers `gh pr checkout` first, refuses-until-correct with manual commands on failure); unions multi-reviewer feedback deduped by `thread_id`; surfaces stale/outdated comments with a line-moved badge rather than silently dropping them; collapses resolved threads into `<details>` for context; logs explicitly-dismissed reviews in a Skipped footer. Smart-reuses an adjacent `docs/<DATE>-<slug>/` spec folder (PRD / SPEC / DIAGNOSIS / EXECUTION) for context and reconciles with a sibling CODE-REVIEW.md when present — agreements boost must-fix confidence (+15), tensions (reviewer flags what we suppressed) surface in a dedicated Reconciliation section. Pure triage — never posts to the PR, never edits source, never commits, never auto-invokes `/execute`. Writes only `docs/YYYY-MM-DD-<slug>/PR-FEEDBACK.md` after a HARD GATE with explicit user approval.
 - **`commit-push`** — take the current working tree to a remote feature branch through a scope-adaptive pre-commit gate, a human-gated branch confirmation (never silently derived, never on `main`/`master`/`production`/`prod`/`stable`/`live`/`trunk`/`release*`), a human-approved logical commit split of up to three commits, convention-matched title+body drafts (repo instructions > commitlint > last 10 commits > Conventional Commits default) with a WHY-focused body and testing-scenarios block for feat/fix, explicit per-file staging (never `git add -A`), a `git fetch` + `git pull --rebase` before `git push -u`, and an optional `## Commits <DATE>` back-pointer to an adjacent `EXECUTION.md` / `DIAGNOSIS.md` when the work sits in a spec folder. Never opens a pull request, never runs `gh pr create`, never `--force`, never `--no-verify`, never commits secrets — PR creation is a separate, explicitly-human-requested action owned by the user.
 - **`solutions`** — capture durable learnings from a completed pipeline (feature, bug, or mixed) into a gated `SOLUTIONS.md` next to the PRD/SPEC/REVISION/DIAGNOSIS/EXECUTION/CODE-REVIEW that produced it; synthesises Summary + Approach + Key Decisions (mini-ADR format with Alternatives) + Gotchas + What Didn't Work + References (+ Root Cause + Prevention for bugs, + Relationship to Original Spec for mixed pipelines, + Mermaid diagram for Deep) from every upstream artifact in the folder. Scope is **inherited** (MAX of upstream artifacts' scope values). Enforces the Iron Law of durability — learnings are phrased as behaviour invariants, not file:line coordinates — so they survive refactors and renames. Re-runs append `## Re-run <DATE>` or `## Post-Release Bug Fix <DATE>` sections rather than overwriting history. Writes only `SOLUTIONS.md` after a HARD GATE with explicit user approval — never edits `CLAUDE.md` / `AGENTS.md` (the user owns that edit if they want it), never chains to another skill.
 
-All eight are scope-adaptive, verify claims against the source material, run a self-review checklist, and gate critical steps on explicit user approval. `spec` adds an adversarial red-team pass and auto-detects an adjacent PRD to build on. `revision` adds a 4-lens composite review (cross-doc alignment, internal coherence, adversarial premise, scope creep + feasibility) and double-gates writing and patching. `diagnosis` is strictly read-only in source code (it creates only the reproduction test file), enforces the iron law "no fixes without root-cause investigation first," and smart-reuses an existing `docs/` folder when the bug maps to a known feature. `execute` is the only skill that writes production code — it enforces the iron law "no production code without a failing test first," refuses to run on protected branches, gates the first line of code on an approved slice plan, and gates writing EXECUTION.md on a green integration pass (full test suite + lint + types). In FIX mode it reads an approved CODE-REVIEW.md, displays every P0/P1/P2/P3 finding in a compact triage summary, lets the human pick which to address and which to skip (default: all P0+P1), slices each selected finding under full TDD discipline, records skipped findings as an audit trail, and back-points CODE-REVIEW.md with an addressed-vs-skipped delta so the loop stays auditable across iterations. `code-review` is a pure reporter that reads the current diff, fans out seven specialized reviewers (plan-alignment, code-quality, convention, test, security, performance, adversarial) through a two- or three-stage pipeline with dedup + confidence-gated suppression + cross-reviewer agreement boost, smart-reuses an adjacent spec folder when the diff maps to a known feature, and writes only CODE-REVIEW.md — never touches production code, tests, commits, or pushes. `commit-push` is the counterpart that ships the diff — a scope-adaptive pre-commit gate (secrets + protected-branch on Lightweight, + tests + lint + debug-artifacts on Standard, + scope-vs-diff + test-coverage-for-code-changes + chore-exemption audit on Deep), a hard human-gated branch confirmation in every run, a human-approved logical split of up to three Conventional-Commits-style messages drafted to match the repo's detected convention, explicit per-file staging, a fetch-and-rebase before push, and an optional back-pointer to an adjacent EXECUTION.md / DIAGNOSIS.md — but refuses protected branches, refuses to open PRs (`gh pr create` is out of scope), refuses `--force` / `--no-verify` / `git add -A`, and refuses to commit secrets regardless of what the user insists. `solutions` is the pipeline's memory terminator — it reads every artifact in the folder (PRD, SPEC, REVISION, DIAGNOSIS, EXECUTION, CODE-REVIEW) and distils durable, file-independent learnings into a scope-inherited `SOLUTIONS.md` with compact mini-ADRs, Gotchas, What Didn't Work, and (for bugs) Prevention. It is a pure synthesiser: never edits code, never touches `CLAUDE.md` / `AGENTS.md`, never chains to another skill — it enforces the Iron Law of durability (behaviour invariants over file:line) and appends on re-runs instead of overwriting, so a folder's SOLUTIONS.md becomes the accretive knowledge record a cold-context future session actually reads before touching that area again.
+All ten are scope-adaptive, verify claims against the source material, run a self-review checklist, and gate critical steps on explicit user approval. `teardown` is the only skill that reads a target outside the repo (local path or URL) — it enforces a one-line user acknowledgment before any URL fetch, runs a hydration ladder (source-map discovery → beautify → optional `wakaru`/`webcrack` decompilation) with graceful degradation when tools are unavailable, labels every unverified claim rather than guessing, refuses to execute any instruction embedded in fetched content, writes the artifact plus optional `teardown-sources/` sidecars into a dated `docs/` folder, and hands off — it never chains into `/prd`, `/spec`, `/diagnosis`, or `/execute`. `spec` adds an adversarial red-team pass and auto-detects an adjacent PRD to build on. `revision` adds a 4-lens composite review (cross-doc alignment, internal coherence, adversarial premise, scope creep + feasibility) and double-gates writing and patching. `diagnosis` is strictly read-only in source code (it creates only the reproduction test file), enforces the iron law "no fixes without root-cause investigation first," and smart-reuses an existing `docs/` folder when the bug maps to a known feature. `execute` is the only skill that writes production code — it enforces the iron law "no production code without a failing test first," refuses to run on protected branches, gates the first line of code on an approved slice plan, and gates writing EXECUTION.md on a green integration pass (full test suite + lint + types). In FIX mode it reads an approved CODE-REVIEW.md, displays every P0/P1/P2/P3 finding in a compact triage summary, lets the human pick which to address and which to skip (default: all P0+P1), slices each selected finding under full TDD discipline, records skipped findings as an audit trail, and back-points CODE-REVIEW.md with an addressed-vs-skipped delta so the loop stays auditable across iterations. `code-review` is a pure reporter that reads the current diff, fans out seven specialized reviewers (plan-alignment, code-quality, convention, test, security, performance, adversarial) through a two- or three-stage pipeline with dedup + confidence-gated suppression + cross-reviewer agreement boost, smart-reuses an adjacent spec folder when the diff maps to a known feature, and writes only CODE-REVIEW.md — never touches production code, tests, commits, or pushes. `pr-feedback` is the inbound counterpart that closes the external-review loop — it takes a GitHub PR reference, enforces a mandatory branch-checkout gate (offers `gh pr checkout` first, refuses-until-correct with manual commands on failure), unions every non-dismissed reviewer's inline thread comments (via GraphQL so `isResolved` / `isOutdated` / thread replies are first-class), timeline comments, and top-level review bodies, dedupes by `thread_id`, classifies each comment into five author-facing verdicts (must-fix / nice-to-have / question / push-back / already-done) with a 0-100 confidence score derived from Conventional Comments labels + decorators + spec cross-reference + anchor freshness + CODE-REVIEW.md fingerprint agreement, drafts a copy-pasteable reply per verdict, and hands off must-fix items to `/execute` FIX mode via a structured Handoff table — it is pure triage and never posts to the PR, never edits source, never commits. `commit-push` is the counterpart that ships the diff — a scope-adaptive pre-commit gate (secrets + protected-branch on Lightweight, + tests + lint + debug-artifacts on Standard, + scope-vs-diff + test-coverage-for-code-changes + chore-exemption audit on Deep), a hard human-gated branch confirmation in every run, a human-approved logical split of up to three Conventional-Commits-style messages drafted to match the repo's detected convention, explicit per-file staging, a fetch-and-rebase before push, and an optional back-pointer to an adjacent EXECUTION.md / DIAGNOSIS.md — but refuses protected branches, refuses to open PRs (`gh pr create` is out of scope), refuses `--force` / `--no-verify` / `git add -A`, and refuses to commit secrets regardless of what the user insists. `solutions` is the pipeline's memory terminator — it reads every artifact in the folder (PRD, SPEC, REVISION, DIAGNOSIS, EXECUTION, CODE-REVIEW) and distils durable, file-independent learnings into a scope-inherited `SOLUTIONS.md` with compact mini-ADRs, Gotchas, What Didn't Work, and (for bugs) Prevention. It is a pure synthesiser: never edits code, never touches `CLAUDE.md` / `AGENTS.md`, never chains to another skill — it enforces the Iron Law of durability (behaviour invariants over file:line) and appends on re-runs instead of overwriting, so a folder's SOLUTIONS.md becomes the accretive knowledge record a cold-context future session actually reads before touching that area again.
 
 ## What they do
+
+### `teardown`
+
+Produces `docs/YYYY-MM-DD-<slug>/TEARDOWN.md` (and optional `teardown-sources/` sidecars for minified/hydrated code), containing:
+
+- Summary (5-8 lines — what the file is, what it does, how it does it, what's surprising, what depends on it — no adjectives like *clean* or *elegant*)
+- Inputs & Hydration table (target, size, detected type, bundler signature, minification state, source-map availability, hydration tools used, sidecars list)
+- Entry points (what runs on load — IIFE, top-level export, window assignment, SW install, etc. — with `file:line`)
+- Module layout (when bundled — module id → hydrated path → role)
+- Function inventory (signature + location + one-sentence role)
+- State inventory (binding → scope → location → lifecycle)
+- Behavior Walkthrough — happy path + branches + error paths + event surfaces, each with `file:line`
+- Data Flow — inputs, transformations, outputs, coupling / fan-out, plus a Mermaid diagram (mandatory on Standard/Deep; `flowchart` / `sequenceDiagram` / `stateDiagram-v2` as appropriate)
+- Edge Cases & Error Paths (table: scenario → trigger → location → behaviour)
+- External Surface — network requests (method / URL / auth / payload shape), DOM touchpoints, storage reads/writes, workers and offloaded work
+- Focus Slice (when the user passed `focus on <area>` or `just the <function>` — the artifact narrows Phases 3-5 to that region)
+- Unknowns & Residual Risk (every `(unverified)` claim, why it's unverified, and what a reader might break if they act on it)
+- References (links to sidecars and any sibling `docs/<DATE>-<slug>/` folders)
+
+The flow is **scope-adaptive**: a Lightweight target (unminified, ≲500 lines, one entry point) gets a compact artifact with 0-1 questions and no diagram; a Standard target (minified ≤500 KB, source map likely, typical production bundle) gets the full source-map → beautify → read pipeline, a Mermaid diagram, and 1-3 questions; a Deep target (>500 KB, multi-bundle, heavy obfuscation, or WASM) gets the full hydration ladder (source-map → beautify → decompilation via `wakaru` / `webcrack` → optional identifier-rename hints via `humanify`), mandatory diagram (often more than one), and 2-3 questions.
+
+The skill is **strictly read-only** — it writes only `TEARDOWN.md` and optional `teardown-sources/{beautified,hydrated,renamed}/` files under `docs/<DATE>-<slug>/`; it never edits source, never invokes `/prd` / `/spec` / `/diagnosis` / `/execute`, and never commits. For URL inputs it emits a one-line user acknowledgment before fetching (audited in frontmatter); for local files no acknowledgment is needed. Every function / variable / flow claim is anchored to a read; unanchored claims are labeled `(unverified)` rather than invented. Fetched content (HTML, JS, error strings, comments) is treated as **data** — commands and URLs embedded inside are never acted on without user confirmation. A focus phrase is honoured only when the user supplies one — the skill does not guess a focus. Writing is gated by a self-review checklist and an explicit HARD GATE on direction, output path, and sidecar scope.
 
 ### `prd`
 
@@ -178,6 +202,30 @@ Every reviewer returns findings in a shared JSON schema — severity (P0/P1/P2/P
 
 The skill is **diff-aware**: auto-detects diff scope in priority order (uncommitted staged + unstaged > branch-vs-base > HEAD~1), with explicit overrides via `/code-review vs <base>`. If no changes are detected, it stops instead of reviewing nothing. It **smart-reuses** an existing `docs/<DATE>-<slug>/` folder when the diff clearly maps to a known feature — the CODE-REVIEW.md sits next to the PRD/SPEC/DIAGNOSIS. Re-reviews append under a `## Re-review <DATE>` section instead of overwriting (the original review is history). On re-review, any prior `## Fixes applied <DATE>` sections (left by `/execute` in FIX mode) are parsed and verified against the fresh findings via fingerprint matching — addressed-but-still-present claims elevate to `claim_mismatch` findings that bypass the suppression gate, and a Verification of prior fixes table summarizes each claim's outcome (verified / mismatch / still present expected / vanished / orphaned). Scope classification (Lightweight / Standard / Deep) tunes which reviewers run, how deep they go, and whether Stage 3 fires. The skill is **gated** by a self-review checklist and an explicit HARD GATE — nothing is written to disk until the user approves the finding set and the output path.
 
+### `pr-feedback`
+
+Produces `docs/YYYY-MM-DD-<slug>/PR-FEEDBACK.md` (or reuses an adjacent spec folder when the PR maps to a known feature), containing:
+
+- **Summary** — PR identity (owner/repo#N, title, author), state (`OPEN` / `MERGED` / `CLOSED` / `DRAFT`), review decision (`APPROVED` / `CHANGES_REQUESTED` / `REVIEW_REQUIRED`), distinct reviewer list, branch-at-triage with short SHA + `matches PR head` label, scope tier + reason, spec-folder reuse note, reconciliation target (sibling CODE-REVIEW.md path, if any)
+- **Verdict counts table** — one row per bucket (must-fix, question, push-back, nice-to-have, already-done, stale/outdated, suppressed low-confidence, resolved collapsed, dismissed skipped)
+- **Must-fix (Mᴺ)** — each with reviewer handle, source kind (inline / timeline / review-body), permalink, SHA-pinned `file:line` link, the comment quoted verbatim, verdict + confidence, rationale, evidence quote with source (diff / spec / prior CODE-REVIEW), cross-ref notes ("corroborates CODE-REVIEW F-3" or "PRD §2.1 supports this"), a copy-pasteable **Suggested reply** draft in a fenced code block, and a **Handoff to /execute** block (file + line + intent + suggestion-block verbatim when the reviewer supplied one)
+- **Questions (Qᴺ)** — same shape; replies cite spec anchors when a plan doc answers the question
+- **Push-back (PBᴺ)** — same shape; replies quote the spec § or test name that justifies the disagreement; never condescending, never apologetic
+- **Nice-to-have (NHᴺ)** — same shape; concise replies, declining gracefully when deferred
+- **Already-done (ADᴺ)** — same shape; reply points to the commit SHA that addressed it
+- **Stale / outdated** — comments whose `line == null` or `isOutdated == true`; every entry attempts `diffHunk` re-anchor and records `re_anchored_from: <orig-path>:<orig-line>` when successful
+- **Reconciliation with CODE-REVIEW.md** — Agreements table (prior finding ↔ current verdict, with confidence boost recorded) + Tensions table (reviewer flags what we suppressed, worth re-examining) when a sibling `CODE-REVIEW.md` exists
+- **Suppressed (confidence < 60)** — visible, never silently dropped; must-fix with confidence ≥ 50 stays top-bar anyway
+- **Resolved threads** — collapsed inside a `<details>` block so the triage stays compact but context is preserved
+- **Residual risks** — stale comments that re-anchoring failed on, multi-reviewer conflicts on the same line (escalates to Deep), push-back verdicts where confidence is marginal (<60) and the disagreement lacks a spec anchor
+- **Skipped — dismissed reviews** — a footer table (reviewer, dismissed-at, comment count, reason if known) — audit trail, never hidden
+- **Handoff table** — one row per must-fix (ID, file, line, intent, suggestion-block?); `/execute` FIX mode parses this directly
+- **Branch-state-at-triage frontmatter** — `current_branch`, `head_sha`, `matches_pr_head` — so a future re-triage can detect branch drift and ask before proceeding
+
+The flow is **scope-adaptive**: a Lightweight triage (≤5 comments, single reviewer, not `CHANGES_REQUESTED`, <100 LOC, no sensitive surface) takes a fast path with optional spec cross-reference and 1-2 sentence replies; a Standard triage (6-20 comments OR ≥2 reviewers OR `CHANGES_REQUESTED` OR 100-500 LOC) runs the full pipeline with mandatory spec cross-reference when a plan folder exists and 3-5 sentence replies; a Deep triage (>20 comments OR multi-reviewer contradiction on the same `path:line` OR sensitive surface — auth / payments / migrations / crypto / webhooks / schema — OR >500 LOC) adds a mandatory Residual Risks section with every ambiguous anchor enumerated, SHA-pinned permalinks in every reply, and a dedicated cross-reviewer-conflict subsection.
+
+The skill is **pure triage** — it reads the PR's feedback, reconciles with adjacent artifacts, and writes one file. It never runs `gh pr comment`, never `gh pr review`, never stages / commits / pushes, never invokes `/execute`. Copy-pasteable replies are **drafts** — the human decides when (and whether) to post them. The mandatory **branch-checkout gate** is non-negotiable: Phase 1 inspects `git branch --show-current` + `git rev-parse HEAD`, compares against the PR's `headRefOid`, and if the working tree is not on the PR head, offers `gh pr checkout <N>` (the path that handles forks and cross-repo PRs cleanly); on decline or failure, the skill refuses with the exact manual recovery commands and stops. The comment fetch uses **GraphQL `reviewThreads`** because REST's `/pulls/<N>/comments` does not expose `isResolved` or `isOutdated` as first-class fields — threading, thread state, and diff hunks come back in one round-trip. The triage runs **single-lane** (no sub-agent fan-out) because the work requires full shared context (diff + spec + prior review) and parallel dispatch would load the same context N times for no gain. Writing is gated by a self-review checklist and an explicit HARD GATE; nothing is written until the user approves the verdicts and the output path.
+
 ### `commit-push`
 
 Produces one to three Conventional-Commits-style commits on a human-confirmed non-protected feature branch, fetch-rebased onto the upstream default, pushed with `-u`, and (optionally) back-pointed to an adjacent artifact — the commits themselves are the durable output.
@@ -228,7 +276,7 @@ The skill is **strictly synthesis-only** — it reads every approved artifact in
 
 The skill is **gated**: a self-review checklist (Iron Law compliance, verifiability against source artifacts, section completeness vs scope tier, no synthetic padding) precedes a HARD GATE that blocks writing `SOLUTIONS.md` until the user approves the summary, the learnings set, and the output path. Manual invocation only — `solutions` does not auto-run at the end of another skill, because the user should decide whether a pipeline is interesting enough to memorialize.
 
-## Invariants (all eight skills)
+## Invariants (all ten skills)
 
 - No code until the artifact is approved.
 - One clarifying question at a time.
@@ -313,6 +361,24 @@ Additional invariants for `code-review`:
 - **Smart spec-folder reuse.** When the diff maps to an existing `docs/<DATE>-<slug>/` feature folder, the CODE-REVIEW.md is written inside it; a new dated folder is created only when no match is found.
 - **HARD GATE on write.** The skill never writes `CODE-REVIEW.md` until the user approves the finding set, the scope tier, and the output path.
 
+Additional invariants for `pr-feedback`:
+
+- **Pure triage. No PR posts, no code edits.** The only file the skill writes is `PR-FEEDBACK.md`. Never runs `gh pr comment` / `gh pr review` / `gh api .../comments`. Never stages, commits, or pushes. Never invokes `/execute`. Copy-pasteable replies are drafts — the human owns the posting turn.
+- **Mandatory branch-checkout gate.** The working tree MUST be on the PR's head SHA before triage proceeds. First offer: run `gh pr checkout <N>` (handles forks and cross-repo PRs cleanly). On decline or failure: refuse with the exact manual `git fetch` / `git checkout` commands, stop, wait for the user to re-invoke. A silent proceed with a mismatched HEAD is a protocol violation — stale diff lines produce wrong verdicts.
+- **PR state gate.** `MERGED` / `CLOSED` PRs refuse unless the user explicitly passes `--force-state`. `isDraft` warns and asks before proceeding. `OPEN` proceeds.
+- **GitHub only, same repo only.** Parsed `owner/repo` must match the cwd's remote; cross-repo triage is refused. GitLab / Bitbucket are out of scope for v1. Bare `#N` invocations resolve `owner/repo` via `gh repo view` or are refused when the cwd has no GitHub remote.
+- **Union non-dismissed reviews, dedupe by `thread_id`.** A PR may accumulate many reviews across reviewers; the triage unions them all. `DISMISSED` reviews are explicitly withdrawn — skipped, never hidden (logged in the Skipped footer with reviewer + dismissed-at + comment count). `PENDING` reviews are dropped (not yet published).
+- **No silent drops.** Stale/outdated comments (`line == null` OR `isOutdated == true`) get a "line moved" badge and sort last inside their bucket; re-anchoring is attempted via `diffHunk` text-search against the current tree. Resolved threads are included in a collapsed `<details>` block. Suppressed verdicts (confidence < 60) stay visible with the score shown.
+- **Verbatim evidence for every verdict.** A 5-30 word quote from the comment body, the diff, the plan document, or a prior CODE-REVIEW finding. Paraphrase is suppressed. Every quote carries a source tag (`comment` / `diff` / `spec:<section>` / `code-review:F-<N>`).
+- **Five verdict buckets, not a free-form judgment.** must-fix / nice-to-have / question / push-back / already-done, with confidence factors derived from Conventional Comments label + decorator + spec cross-reference + prior CODE-REVIEW match + anchor freshness + code-level corroboration. See `references/taxonomy.md`.
+- **Confidence-gated suppression with P0 exception.** Verdicts below 60 confidence move to the visible Suppressed table, EXCEPT `must-fix` with confidence ≥ 50 (keep top-bar so critical concerns surface under ambiguity). Never silently dropped.
+- **Reconcile with adjacent CODE-REVIEW.md, never mutate it.** When a sibling `CODE-REVIEW.md` exists in the target folder, reviewer comments that match prior findings by fingerprint boost the must-fix confidence (+15); tensions ("reviewer flags what we suppressed") surface in a dedicated Reconciliation section. The prior review is **read-only** input — never edited, even in trivial ways.
+- **Smart spec-folder reuse.** When the PR maps to an existing `docs/<DATE>-<slug>/` folder by branch slug, title overlap, or diff-file overlap ≥50%, write inside it. Otherwise derive a slug from the PR head branch and create a new dated folder.
+- **Single-lane triage.** The skill runs inline — no sub-agent fan-out — because the work requires full shared context (diff + spec + prior review) and parallel dispatch would load the same context N times for no gain. Specialized analysis (security depth, perf depth) escalates the scope tier and cites the plan; it does not spawn a reviewer agent.
+- **GraphQL for inline threads, REST for timeline + review bodies.** `reviewThreads` is the only way to get `isResolved` / `isOutdated` / reply chains first-class. REST `/pulls/<N>/comments` omits `isResolved` entirely and is not used.
+- **Handoff record, not handoff call.** The Handoff table tells `/execute` FIX mode what to apply and where (file, line, intent, optional verbatim suggestion block) — the skill never invokes `/execute` itself. The human runs `/execute` in a separate turn when ready.
+- **HARD GATE on write.** The skill never writes `PR-FEEDBACK.md` until the user approves the verdict set, the scope tier, and the output path. Re-triage on the same PR appends `## Re-triage <DATE>` rather than overwriting — prior triage is history.
+
 Additional invariants for `solutions`:
 
 - **Iron Law of durability: learnings are behaviour, not coordinates.** Every Gotcha, Key Decision, and What-Didn't-Work entry is phrased so it would survive a file rename or refactor. `src/checkout/cart.ts:42` belongs in the evidence column of the source artifact; SOLUTIONS.md states the invariant that held or was violated.
@@ -344,9 +410,48 @@ git clone https://github.com/vilarjp/eva ~/.claude/plugins/eva
 
 ### As a project-local skill
 
-Copy `skills/prd/`, `skills/spec/`, `skills/revision/`, `skills/diagnosis/`, `skills/execute/`, `skills/code-review/`, `skills/commit-push/`, or `skills/solutions/` into your project's `.claude/skills/` directory.
+Copy `skills/teardown/`, `skills/prd/`, `skills/spec/`, `skills/revision/`, `skills/diagnosis/`, `skills/execute/`, `skills/code-review/`, `skills/pr-feedback/`, `skills/commit-push/`, or `skills/solutions/` into your project's `.claude/skills/` directory.
 
 ## Usage
+
+### `teardown`
+
+```
+/teardown path/to/bundle.js
+/teardown https://cdn.example.com/app.min.js
+/teardown https://example.com
+```
+
+Or with a focus phrase (narrows the artifact to one area of the target):
+
+```
+/teardown app.min.js focus on auth flow
+/teardown app.min.js just the retry logic
+```
+
+Or from a natural description:
+
+> "Reverse-engineer this bundle and map out its data flow."
+> "Break down how this library handles auth — ignore the rest."
+
+The skill will:
+
+1. Detect input shape (local path vs URL) and classify scope (Lightweight / Standard / Deep) from size, minification, bundler signature, and obfuscation markers.
+2. For URL inputs, emit a one-line permission acknowledgment question before fetching. For local files, skip the gate.
+3. Fetch or read the target; record sha256 + byte count; detect bundler signature (Webpack / Rollup / Vite / esbuild / Parcel / esm.sh / none) and minification state.
+4. Scan `docs/*/` for a related PRD/SPEC folder — if the torn-down file maps to an existing feature, offer smart-reuse of the folder (writes `TEARDOWN.md` next to the PRD/SPEC and adds a forward-reference).
+5. Run the hydration pipeline: Rung 1 source-map discovery (`//# sourceMappingURL=`, sibling `.map`, common dev paths) → `shuji` extract; Rung 2 beautification (`prettier` → `js-beautify` → LLM fallback); Rung 3 (Deep only) decompilation / identifier renaming (`wakaru` for Rollup/esbuild, `webcrack` for Webpack + obfuscator.io, `humanify` for LLM-driven rename hints); Rung 4 read-as-is fallback with unverified labels. Every tool is optional — the pipeline degrades cleanly when `npx` is unavailable.
+6. Save intermediate hydration sidecars under `docs/<DATE>-<slug>/teardown-sources/{beautified,hydrated,renamed}/` when the user approves.
+7. Ask ≤3 clarifying questions, one at a time, only on genuine ambiguity (which bundle among many, intended outcome — understanding vs replication vs security, focus scope).
+8. Build the structural map: entry points, module layout (if bundled), function inventory (signature + location + role), state inventory (scope + lifecycle).
+9. Walk behaviour — happy path, branches, error paths, event surfaces — each step anchored to a `file:line`.
+10. Map data flow — inputs, transformations, outputs, coupling — and produce a Mermaid diagram (mandatory on Standard/Deep).
+11. Inventory external surface: network requests (method + URL template + auth + payload shape), DOM touchpoints, storage keys, workers, offloaded Promises, timers.
+12. If focus mode is active, narrow Phases 3-5 to the focus slice and cross-link the rest with `file:line` pointers.
+13. Enumerate unknowns — every `(unverified)` claim gets a row with its location and the reason it could not be verified — then add a residual-risk paragraph per unknown explaining what a reader might break if they act on it.
+14. Emit a self-review checklist (every cited function was read; every identifier meaning is anchored in source-map / beautified cross-reference / call-site evidence; diagram matches narrative matches code; the artifact is obviously time-bound).
+15. **HARD GATE** — propose the direction, the output path, and the sidecar scope; wait for approval.
+16. Write `docs/<DATE>-<slug>/TEARDOWN.md` and any approved sidecars. Never edits source, never commits, never chains into another skill — the user decides when the artifact is ripe enough to compose with `/prd`, `/spec`, `/diagnosis`, or `/execute`.
 
 ### `prd`
 
@@ -534,6 +639,59 @@ The skill will:
 14. **HARD GATE** — propose the finding set, scope tier, path, and (on re-review) the claim-verification summary; wait for approval.
 15. Write `docs/<DATE>-<slug>/CODE-REVIEW.md` (or append a `## Re-review <DATE>` section into an existing one) with severity-grouped findings, the Suppressed table, Pre-existing table, plan-alignment summary, diff inventory, next-steps list, and — on re-review — a **Verification of prior fixes** subsection with one row per prior claim. Never edits, commits, or pushes.
 
+### `pr-feedback`
+
+```
+/pr-feedback https://github.com/owner/repo/pull/123
+/pr-feedback owner/repo#123
+/pr-feedback #123
+```
+
+Or with a scope override:
+
+```
+/pr-feedback https://github.com/owner/repo/pull/123 deep
+/pr-feedback owner/repo#123 lightweight
+```
+
+Or for a merged/closed PR (rare — post-merge retrospective triage):
+
+```
+/pr-feedback owner/repo#123 --force-state
+```
+
+Or from a natural description:
+
+> "Triage the review comments on my PR."
+> "Handle the feedback on #123."
+> "Go through the comments on https://github.com/org/repo/pull/456 and tell me which ones matter."
+> "I got review comments — help me address them."
+
+The skill will:
+
+1. Parse the PR reference into `{owner, repo, number}`. If a bare `#N` was passed, resolve `owner/repo` from the cwd's remote. If the parsed `owner/repo` does not match the cwd's remote, refuse with a `cd` hint — cross-repo triage is out of scope. Verify `gh auth status`.
+2. Fetch PR metadata in a single `gh pr view` call (`state`, `isDraft`, `headRefName`, `headRefOid`, `headRepositoryOwner`, `baseRefName`, `author`, `reviewDecision`, `labels`, `mergeable`, `url`, `title`, `body`). Refuse `MERGED` / `CLOSED` without `--force-state`; warn + confirm on `isDraft`.
+3. Resume-check for an existing `docs/*/PR-FEEDBACK.md` whose frontmatter `pr_url` matches; offer **A. Append** a `## Re-triage <DATE>` section (recommended after new reviewer activity) / **B. Overwrite** (old preserved in git history) / **C. Write to PR-FEEDBACK-2.md** / **D. Abort**.
+4. Scan `docs/*/` for a related spec folder (PRD / SPEC / DIAGNOSIS / EXECUTION) — if the PR's branch slug, title, or diff-file set overlaps ≥50% with an existing folder, offer to write inside it (and reconcile with any sibling `CODE-REVIEW.md`); otherwise derive a slug from the PR head branch and create a new dated folder.
+5. Classify scope provisionally (Lightweight / Standard / Deep) from base-rate signals (reviewer count from `gh pr view`, diff LOC via `gh pr diff --stat`, sensitive-surface heuristics on the touched paths, `reviewDecision == CHANGES_REQUESTED`); refine once comment counts land in Phase 2.6.
+6. **HARD HUMAN GATE — branch checkout** (MANDATORY): inspect the current branch + HEAD SHA. If the working tree is NOT on the PR's `headRefOid`, offer **Option A — run `gh pr checkout <N>` for you now** (handles forks cleanly, recommended) or **Option B — refuse and print the manual commands** (you run them, re-invoke). On B or on Option A failure, STOP with the exact `git fetch <fork-url> <branch>:<local>` / `git checkout <local>` recovery commands — do not attempt triage with a mismatched HEAD.
+7. Verify `git rev-parse HEAD == <headRefOid>` after checkout; abort and fall back to refuse-until-correct on mismatch.
+8. Fetch all comments in parallel: a single GraphQL `reviewThreads` query (returns thread state + replies + `isResolved` / `isOutdated` / `diffHunk` / `author` / `body` / `url` — REST omits these first-class), a paginated REST call to `/issues/<N>/comments` (timeline), a paginated REST call to `/pulls/<N>/reviews` (top-level review bodies with `state`). Drop `DISMISSED` and `PENDING` reviews (log the skip in the audit trail with reviewer handle + dismissed-at + comment count).
+9. Normalize every comment into a shared record shape (id, thread_id, path, line, originalLine, body, author, commit_id, original_commit_id, diffHunk, isResolved, isOutdated, minimizedReason, suggestion_blocks[], source_kind). Dedupe by `thread_id` across the multi-reviewer union.
+10. Phase 2.6 scope refinement — if actual comment counts / reviewer count / multi-reviewer contradictions on same `path:line` escalate the tier, announce `pr-feedback: scope escalated <OLD> → <NEW> (<reason>)`; only de-escalate when the provisional tier was clearly inflated and no Phase 4 records exist yet.
+11. Ask ≤3 clarifying questions, one at a time, only on genuine ambiguity (folder reuse, resume disposition on an existing PR-FEEDBACK.md, scope override).
+12. Cross-reference each comment against the diff (via `gh pr diff`), the spec folder (PRD § / SPEC § / DIAGNOSIS root cause / EXECUTION acceptance criteria), and any sibling `CODE-REVIEW.md` findings by fingerprint (`normalize(file) + line_bucket(line, ±3) + normalize(intent)`). Attempt to re-anchor stale comments (`line == null` OR `isOutdated == true`) by text-searching the `diffHunk` snippet against the current working tree.
+13. Triage each comment into one of five verdicts: **must-fix** / **nice-to-have** / **question** / **push-back** / **already-done**, computing a 0-100 confidence score from Conventional Comments label + decorator + spec cross-reference + prior CODE-REVIEW match + anchor freshness + code-level corroboration (see `references/taxonomy.md`).
+14. Draft a copy-pasteable GitHub reply per verdict, in the PR author's voice (first-person, no "[reviewer's name]" placeholders, no reflexive thanks) — must-fix acknowledges and commits to a fix path; question answers directly and cites spec § when applicable; push-back is respectful and specific, quoting the spec § or test name that justifies the disagreement; nice-to-have is concise and declines gracefully when deferred; already-done points to the commit SHA.
+15. For each must-fix, build a Handoff record — `file:line` (re-anchored when stale, `<unknown>` when re-anchor failed — which forces the user to resolve before `/execute` can consume), intent (what to change), and any verbatim ` ```suggestion ` block the reviewer supplied (so `/execute` applies it as-is).
+16. Reconcile with sibling `CODE-REVIEW.md` when present — Agreements (prior finding ↔ current verdict, with confidence boost recorded) + Tensions (reviewer flags what we suppressed, worth re-examining in a future self-review).
+17. Collate Residual Risks (stale comments that re-anchoring failed on, multi-reviewer conflicts on the same line, push-back verdicts with marginal confidence + no spec anchor) and a Skipped footer (dismissed reviews audit trail).
+18. Suppress verdicts below 60 confidence into a visible Suppressed table (P0 exception: must-fix with confidence ≥ 50 stays top-bar), group resolved threads inside a collapsed `<details>` block.
+19. Emit a self-review checklist (mandatory checkout gate cleared with HEAD match, every verdict has a verbatim quote, dismissed reviews logged not hidden, stale comments badged not dropped, confidence math cites the taxonomy factors, Handoff `file:line` exists for every must-fix or is explicitly `<unknown>`, no `/execute` was invoked, no PR posts were made).
+20. **HARD GATE** — propose the verdict set, the scope tier, the reconciliation summary, and the output path; wait for approval.
+21. Write `docs/<DATE>-<slug>/PR-FEEDBACK.md` (or append a `## Re-triage <DATE>` section into an existing one). The artifact contains severity-grouped verdicts with evidence and drafted replies, Reconciliation (when applicable), Suppressed, Resolved (collapsed), Residual Risks, Skipped (dismissed), and the Handoff table `/execute` FIX mode consumes.
+22. Close with a one-sentence next-step hint: `/execute` in FIX mode on this folder to apply the must-fix items, posting the drafted replies is the human's separate turn. The skill never invokes `/execute`, never runs `gh pr comment`, never runs `gh pr review`.
+
 ### `commit-push`
 
 ```
@@ -624,6 +782,14 @@ eva/
 │   ├── code-review-performance-reviewer.md
 │   └── code-review-adversarial-reviewer.md
 └── skills/
+    ├── teardown/
+    │   ├── SKILL.md
+    │   ├── templates/
+    │   │   └── TEARDOWN.md
+    │   └── references/
+    │       ├── scope-tiers.md
+    │       ├── hydration-pipeline.md
+    │       └── anti-patterns.md
     ├── prd/
     │   ├── SKILL.md
     │   ├── templates/
@@ -669,6 +835,14 @@ eva/
     │       ├── findings-schema.md
     │       ├── scope-tiers.md
     │       └── anti-patterns.md
+    ├── pr-feedback/
+    │   ├── SKILL.md
+    │   ├── templates/
+    │   │   └── PR-FEEDBACK.md
+    │   └── references/
+    │       ├── scope-tiers.md
+    │       ├── taxonomy.md
+    │       └── github-api.md
     ├── commit-push/
     │   ├── SKILL.md
     │   └── references/
@@ -685,7 +859,7 @@ eva/
             └── anti-patterns.md
 ```
 
-## How `prd`, `spec`, `revision`, `diagnosis`, `execute`, `code-review`, `commit-push`, and `solutions` compose
+## How `teardown`, `prd`, `spec`, `revision`, `diagnosis`, `execute`, `code-review`, `pr-feedback`, `commit-push`, and `solutions` compose
 
 ```
   idea ──▶ prd ──▶ PRD.md ──▶ spec ──▶ SPEC.md ──▶ revision ──▶ REVISION.md ──▶ execute ──▶ EXECUTION.md + commits ──▶ code-review ──▶ CODE-REVIEW.md ──▶ commit-push ──▶ commits + push ──▶ solutions ──▶ SOLUTIONS.md
@@ -733,6 +907,38 @@ eva/
   │                               addressed-but-still-present elevates to a      │
   │                               claim_mismatch finding that bypasses           │
   │                               suppression; loop continues until clean)       │
+  ╰──────────────────────────────────────────────────────────────────────────────╯
+
+  ╭─────────────────────────  external review → fix loop  ───────────────────────╮
+  │                                                                              │
+  │  GitHub PR (teammate reviews)                                                │
+  │       │                                                                      │
+  │       ▼                                                                      │
+  │  /pr-feedback  ──▶  branch-checkout gate (offers gh pr checkout)             │
+  │       │             ──▶ GraphQL reviewThreads + REST timeline + reviews      │
+  │       │             ──▶ union non-dismissed · dedupe by thread_id            │
+  │       │             ──▶ classify into 5 verdicts (must-fix / nice-to-have /  │
+  │       │                 question / push-back / already-done) with 0-100     │
+  │       │                 confidence                                          │
+  │       │             ──▶ reconcile with sibling CODE-REVIEW.md (agreements    │
+  │       │                 +15, tensions surface)                               │
+  │       ▼                                                                      │
+  │  PR-FEEDBACK.md  ──▶  must-fix Handoff table  ──▶  /execute (FIX mode)       │
+  │       │                                                 │                    │
+  │       │                                                 ▼                    │
+  │       │                                         EXECUTION.md + commits       │
+  │       │                                         (same Phase 0.5 triage,      │
+  │       │                                          same TDD discipline)        │
+  │       ▼                                                 │                    │
+  │  copy-paste drafted replies to the PR                   ▼                    │
+  │  (human's separate turn — never auto-posted)    /commit-push  ──▶  push      │
+  │                                                         │                    │
+  │                                                         ▼                    │
+  │                                             reviewer sees the commits,      │
+  │                                             re-reviews or approves;         │
+  │                                             a new /pr-feedback run on the   │
+  │                                             next round appends              │
+  │                                             ## Re-triage <DATE>              │
   ╰──────────────────────────────────────────────────────────────────────────────╯
 
   bug report ──▶ diagnosis ──▶ DIAGNOSIS.md ──▶ execute ──▶ EXECUTION.md + commits ──▶ code-review ──▶ CODE-REVIEW.md ──▶ commit-push ──▶ commits + push ──▶ solutions ──▶ SOLUTIONS.md
@@ -795,20 +1001,24 @@ eva/
 
 Each artifact is standalone and durable:
 
+- **TEARDOWN** answers *what does this unfamiliar file actually do* — a structural map of the target (entry points, function inventory, state, data flow, external surface, edge cases), anchored to `file:line` pointers into the original or hydrated source, with a Mermaid diagram of the durable mechanism and a residual-risk section listing every `(unverified)` claim and what a reader might break by acting on it. The only eva artifact that reads input from outside the repo (local path or URL) and the only one that writes sidecars (`teardown-sources/`). Strictly read-only: never edits source, never commits, never opens a PR. Composes one-way with the downstream skills — on approval the user can run `/prd` to brainstorm a replacement, `/spec` to design a port, or `/diagnosis` to investigate a regression — but `teardown` itself never auto-invokes any of them.
 - **PRD** answers *what and why* — readable by PMs and engineers.
 - **SPEC** answers *how, technically* — readable by engineers, grounded in the codebase, full of embedded mini-ADRs, with tracer-bullet phases that survive refactors.
 - **REVISION** answers *where the pair disagrees and what to fix* — evidence-grounded findings with severity, minimal proposed fixes, and an audit record that the review happened (clean pass or otherwise). The adversarial lens is dispatched to a dedicated `revision-adversarial-review` sub-agent so its read is not biased by the orchestrator's narrative.
 - **DIAGNOSIS** answers *what broke, why, and how to prove it* — an investigation trail, 3+ structural hypotheses, a full causal chain with predictions, a reproduction test with RED proof, a root cause pinned to file:line, a suggested minimal fix, hotspots, and concerns. Strictly read-only in source code.
 - **EXECUTION** answers *what shipped, how, and what's proven* — literal RED and GREEN proofs per vertical slice, an integration-gate log with full suite + lint + types, acceptance-criteria trace mapping each SPEC criterion / DIAGNOSIS reproduction test / selected CODE-REVIEW finding to the slice that satisfies it, NOTICED-BUT-NOT-TOUCHING list, follow-ups, concerns, the Conventional Commits table, and (FIX mode) the Findings Addressed + Findings Skipped tables that give the next reviewer a clean audit trail of what was handled vs deferred. The only eva artifact produced alongside real code changes.
 - **CODE-REVIEW** answers *what a careful pre-merge review would surface* — severity-grouped findings from up to seven specialist reviewers, verbatim evidence for every finding, merged across reviewers with fingerprint dedup and cross-reviewer agreement boosts, confidence-gated suppression in a visible table, pre-existing problems separated into their own table, plan-alignment summary when a plan document is present, diff inventory mapping every changed file to the reviewers who opened it, and a next-steps action list. Pure reporter — never writes, commits, or pushes code.
+- **PR-FEEDBACK** answers *which reviewer comments actually need action, and how should I reply* — five-bucket triage (must-fix / nice-to-have / question / push-back / already-done) over the union of every non-dismissed reviewer's inline comments (GraphQL `reviewThreads` so `isResolved` / `isOutdated` / reply chains are first-class), timeline comments, and review bodies. Each verdict carries a 0-100 confidence score from Conventional Comments label + decorator + spec cross-reference + prior CODE-REVIEW fingerprint agreement + anchor freshness, verbatim evidence, a first-person copy-pasteable reply draft, and (for must-fix) a Handoff record that `/execute` FIX mode consumes directly. Stale comments are badged not dropped, resolved threads are collapsed not hidden, dismissed reviews are logged in a Skipped footer, low-confidence verdicts (<60) surface in a visible Suppressed table (P0 exception at ≥50). Reconciles with a sibling CODE-REVIEW.md when present — agreements boost must-fix confidence (+15), tensions surface for future self-review. Pure triage — never posts to the PR (the human owns posting the replies), never edits source, never commits, never invokes `/execute`. The mandatory branch-checkout gate (offer `gh pr checkout` first, refuse-until-correct with manual commands on failure) is non-negotiable — a mismatched HEAD produces wrong verdicts. The only artifact it writes is `PR-FEEDBACK.md`; re-triage on the same PR appends `## Re-triage <DATE>` rather than overwriting.
 - **`commit-push` produces no standalone artifact** — it takes the working-tree diff through a scope-adaptive pre-commit gate (secrets scan + protected-branch refusal on every tier; + full test suite + lint + debug-artifact scan on Standard; + scope-vs-diff + test-coverage + chore-exemption audit on Deep), a human-gated A/B branch question (always — never silently derived, never on `main` / `master` / `production` / `prod` / `stable` / `live` / `trunk` / `release*`), a human-approved logical split of up to three commits, a convention-matched title + body draft per commit (repo instructions > commitlint > last 10 commits > Conventional Commits default), a fetch + pull `--rebase` before `push -u`, and an optional back-pointer appended to an adjacent EXECUTION.md or DIAGNOSIS.md (never rewrites their content, never mutates their frontmatter). Never runs `gh pr create`, never `git add -A`, never `--force`, never `--no-verify`, never commits secrets.
 - **SOLUTIONS** answers *what's worth remembering from this pipeline* — a compact, scope-inherited reference document that a cold-context future session can read before touching the same area again. Summary + Approach + Key Decisions (compact mini-ADRs with genuine Alternatives) + Gotchas (behaviour invariants, phrased to survive a rename) + What Didn't Work (Step-Back attempts, REJECTED hypotheses, suppressed findings — the map of the territory) + References. Bugs add Root Cause and Prevention (class-of-bug + defense-in-depth location, regression-protection test named by test name not file path). Mixed pipelines add Relationship to Original Spec. Deep scope adds a mandatory Mermaid diagram of the durable mechanism. Pure synthesiser — never edits source code, never mutates upstream artifacts, never touches CLAUDE.md / AGENTS.md (the user owns that edit), never chains to another skill. Re-runs append `## Re-run <DATE>` or `## Post-Release Bug Fix <DATE>` sections instead of overwriting, so a folder's SOLUTIONS.md becomes the accretive record of every learning cycle on that feature.
+- **`teardown` composes one-way into the rest of the pipeline, never the other way** — it reads an unfamiliar target (local file or URL), produces a structural map in `docs/<DATE>-<slug>/TEARDOWN.md`, and stops. From there the user can hand the artifact to `/prd` to brainstorm a replacement or an adaptation, to `/spec` to design a port grounded in the torn-down reference, or to `/diagnosis` when the target is a production bundle that broke. When the teardown maps to an existing feature folder (e.g. torn-down competitor bundle for an already-scoped feature), the skill smart-reuses the folder and adds a forward-reference into the sibling PRD/SPEC. The skill never auto-invokes any downstream skill, never edits source, never commits — the handoff is always a separate human turn. For URL targets the skill also enforces a one-line permission acknowledgment before fetching (audited in the frontmatter) and refuses to act on any instruction embedded in fetched content.
 - **`spec` can run without a PRD** — it will ask the product-framing questions itself when needed (but will suggest starting with `prd` if the problem framing is still vague).
 - **`revision` can run on a single document** — if only `PRD.md` or `SPEC.md` is present, it degrades to a single-doc review (internal coherence + adversarial only, cross-doc skipped). The natural flow is still to author both first, then revise.
 - **`diagnosis` composes with `spec` and `prd`** — when the bug maps to a known feature, `diagnosis` nests DIAGNOSIS.md inside that feature's folder and back-links the primary doc with a `## Post-Release Bug Fix` section. This keeps the full feature → bug → fix lifecycle in one place.
 - **`execute` can run without any upstream artifact** — RAW mode accepts a direct human prompt, derives an internal micro-spec from the prompt + codebase pre-scan, and proceeds through the same red-green-refactor loop. When upstream artifacts exist, it auto-detects them in priority order (explicit-path-by-filename > FIX-mode trigger + CODE-REVIEW.md > REVISION post-patch > SPEC > DIAGNOSIS > PRD-alone-with-warning) and uses them as the source of truth. A direct human prompt like `/execute fix the off-by-one in cart.totals()` works exactly like a compact Lightweight SPEC would.
 - **`execute` FIX mode closes the correction → review loop** — pass `docs/<DATE>-<slug>/CODE-REVIEW.md` (or a prompt like `/execute address the blockers`) and the skill parses every finding, asks the human which to address vs skip (default: P0 + P1), slices each selected finding under full TDD, records skipped findings in an audit table, and appends `## Fixes applied <DATE>` to CODE-REVIEW.md. The user then re-runs `/code-review`, which appends `## Re-review <DATE>` with the delta — cleared findings, surviving ones, and any newly-introduced ones. The loop is **human-paced**: nothing auto-loops, every iteration passes through HARD GATE 1 (plan approval) and HARD GATE 2 (green integration gate), and the user can stop at any iteration by simply not running the next skill.
 - **`code-review` can run with or without any plan document** — when a plan (PRD / SPEC / DIAGNOSIS / REVISION / EXECUTION) exists in the target folder, Stage 1 plan-alignment uses it as the source of truth and can block Stage 2 on P0 drift; when none exists, Stage 1 is skipped and the pipeline reviews on diff shape alone. The review is always diff-first: scope auto-detects in priority order (uncommitted > branch-vs-base > HEAD~1), smart-reuses the feature's spec folder when the diff maps to one, and re-reviews append under `## Re-review <DATE>` rather than overwriting. It composes naturally as the final gate after `execute` — once implementation commits land, `code-review` audits the exact diff before merge — but is useful standalone too: a `/code-review` on a quick WIP branch surfaces blockers before the author even writes a plan.
+- **`pr-feedback` is the inbound counterpart to `code-review` — it closes the external-review loop** — after the author pushes a branch and opens a PR, teammates review on GitHub; `/pr-feedback <pr-url>` then pulls the full comment set, classifies each one into a five-bucket verdict, drafts a reply per comment, and hands the must-fix items to `/execute` FIX mode via the same Handoff table shape that `code-review` produces. The skill **pairs cleanly with an adjacent `CODE-REVIEW.md`** when one exists: reviewer comments that match prior self-review findings by fingerprint strengthen the must-fix bucket (+15 confidence), and tensions ("reviewer flags what we suppressed") surface in a Reconciliation section so the author can re-examine the suppression in a future self-review. The **mandatory branch-checkout gate** distinguishes this skill from every other one in the pipeline — because the diff on disk must match the PR HEAD for anchors to resolve correctly, the skill offers `gh pr checkout` first and refuses-until-correct with exact manual commands on failure; a silent proceed with a mismatched HEAD would produce wrong verdicts. It is **pure triage**: never posts to the PR (the human copy-pastes the drafted replies at their discretion), never edits source, never commits, never runs `/execute` — the handoff is always a separate human turn. Re-triage on the same PR appends `## Re-triage <DATE>` rather than overwriting, so the history of a contentious review is preserved. The skill composes with `/execute` FIX mode (which consumes the Handoff table) → `/code-review` (on the resulting diff) → `/commit-push` (push the fixes) → re-run `/pr-feedback` after the reviewer looks again, forming a loop that mirrors the correction → review loop but for external reviewers.
 - **`commit-push` is the last mile and works from any entry-point** — invoked at the end of the pipeline (after `code-review` clears) it commits the working tree and pushes; invoked in the middle of a feature it commits intermediate progress without pushing context the human is not ready to share; invoked standalone on a branch with no eva artifacts at all it still applies the full gate (secrets + protected-branch + scope-adaptive checks + branch A/B question + split draft + message draft + fetch+rebase+push). The skill is deliberately **not** a PR-opening shortcut — after a successful push it reports the remote SHA and hands the human a plain-text hint ("open a PR when you're ready"); it never drafts a PR body in chat and never runs `gh pr create`, so PR creation stays a separate, explicit human action. The only side-effect it writes into eva's docs tree is a `## Commits <DATE>` back-pointer appended to the adjacent EXECUTION.md or DIAGNOSIS.md when one exists — it never rewrites those artifacts' content, never touches their frontmatter, never changes their status.
 - **`solutions` is the pipeline's memory terminator** — the last, optional, manually-invoked step after the commits ship. It composes naturally after `commit-push` (a just-shipped feature is the freshest surface to harvest learnings from), after `code-review` even without a shipping step (when the review itself produced durable Gotchas), or months later on an old folder whose learnings the team only now realizes were worth preserving. It **reads every artifact in the folder** — the original PRD / SPEC / REVISION, the DIAGNOSIS (if a bug was handled), the EXECUTION with its per-slice detail and NOTICED-BUT-NOT-TOUCHING list, the CODE-REVIEW with its findings and suppressed table, and any appended `## Re-run`, `## Re-review`, `## Post-Release Bug Fix`, or `## Fixes applied` sections — then distils the durable parts into SOLUTIONS.md in the same folder. Scope is **inherited** (MAX of upstream `scope` frontmatter values) so ceremony matches what the pipeline earned. The Iron Law of durability (behaviour invariants, never file:line) makes the document survive refactors. Re-runs **always append** under `## Re-run <DATE>` or `## Post-Release Bug Fix <DATE>` rather than overwrite, so the SOLUTIONS.md for a long-lived feature accretes across every cycle. The skill **never edits code, never mutates upstream artifacts, never touches `CLAUDE.md` / `AGENTS.md`**, and **never chains to another skill** — if the synthesis surfaces a learning worth promoting into durable project-wide instructions, the skill names the opportunity in a closing sentence and hands back; the user performs that edit on a separate turn. Manual invocation only — `solutions` runs when the human decides a pipeline is worth memorializing, not at the silent end of every other skill.
 
