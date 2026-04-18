@@ -186,6 +186,27 @@ Before writing the file, emit this checklist to the user with `✓` or `✗` on 
 
 If any check fails → STOP, fix, re-emit. Do not proceed with any `✗` unresolved.
 
+**Deep scope only — 100-point scoring rubric (MANDATORY for Deep, skipped for Lightweight / Standard).**
+
+After the checklist clears, score the draft against the four-dimension rubric in `references/scoring-rubric.md`:
+
+- **Functional completeness** — 30 pts (user stories × flows, error paths named, measurable success metrics)
+- **Technical soundness** — 25 pts (codebase claims verified, options genuinely different, recommendation follows from goals)
+- **Implementation readiness** — 25 pts (constraints explicit, stories map to acceptance hooks, not-doing list real)
+- **Business impact** — 20 pts (specific problem statement, trade-off named, open questions tagged)
+
+Emit the score block to the user before Phase 9:
+
+```
+PRD score: <total>/100  (target ≥ 90)
+  Functional completeness  : <n>/30   — <1-line note on weakest criterion>
+  Technical soundness      : <n>/25   — <...>
+  Implementation readiness : <n>/25   — <...>
+  Business impact          : <n>/20   — <...>
+```
+
+If `total < 90`, loop back to the phase that produced the weakest dimension (Phase 3 for framing, Phase 4 for options, Phase 6 for stories / not-doing), fix, re-emit the Phase 8 checklist AND a fresh score block. Maximum three iterations before surfacing a stuck score to the user. Do NOT proceed to the HARD GATE below 90 unless the user explicitly accepts the gap.
+
 ### Phase 9 — HARD GATE: approve direction + slug
 
 Propose the directory slug: kebab-case, 2-4 words, derived from the problem statement. Example: *"faster mobile checkout"* → `faster-mobile-checkout`.
@@ -250,9 +271,12 @@ Do NOT invoke any implementation skill. Do NOT start coding. The skill is comple
 - You skipped clarification even though WHY / WHO / SUCCESS / CONSTRAINTS were unclear
 - Your problem statement is vague or aspirational rather than specific
 - You cited a file, table, endpoint, or dependency without reading it
+- Deep scope, and you proceeded to Phase 9 with a rubric score below 90 without explicit user acceptance of the gap
+- You rounded rubric scores up to clear the 90 threshold — score as the next reader would, not as the session wants to finish
 
 ## References
 
 - `templates/PRD.md` — the output template. Read only at Phase 10.
 - `references/scope-tiers.md` — detailed Lightweight / Standard / Deep rubric.
 - `references/section-guides.md` — how-to for each PRD section (what makes a good Problem Statement, how to spot fake Non-Goals, etc.). Load when a section is underperforming the self-review checklist.
+- `references/scoring-rubric.md` — 100-point quality rubric used in Phase 8 for Deep-scope PRDs only. Load after the checklist clears.

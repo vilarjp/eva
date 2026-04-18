@@ -6,7 +6,7 @@
 reverse-engineer, plan, diagnose, execute, review, triage PR feedback, ship, and remember.**
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
-[![Version 0.9.0](https://img.shields.io/badge/version-0.9.0-brightgreen)](.claude-plugin/plugin.json)
+[![Version 0.10.0](https://img.shields.io/badge/version-0.10.0-brightgreen)](.claude-plugin/plugin.json)
 [![Claude Code plugin](https://img.shields.io/badge/claude%20code-plugin-orange)](https://docs.claude.com/en/docs/claude-code/plugins)
 
 </div>

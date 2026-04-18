@@ -23,52 +23,48 @@ The orchestrator passes:
 
 **Read Stage 2's findings FIRST.** Your job is to extend, not repeat. If you produce a finding that Stage 2 already has (same file/line, same intent), you have failed the stage.
 
-## What to look for
+## Three lenses
 
-### Unstated assumptions
-- What does the diff silently assume? Single-tenant, single-region, same-process, small-table, trusted input, idempotent upstream, available third-party, bounded user behavior.
-- Pick one assumption that is NOT stated in comments or plan; describe the scenario where it breaks; name the observable consequence.
+Read the diff three times, each time under a different lens. The lenses are not three reviewers — they are three distinct postures inside your single pass, each built to catch a failure class the other two miss. Do not collapse them; the discipline is what separates adversarial from generic review.
 
-### Decision stress (per diff-change)
-For each material change in the diff, walk through:
-- **Load:** at expected rps, does this survive? At 5× rps?
-- **Partition:** if the upstream API / DB / cache is partitioned (down, slow, returns 503), what does this code do?
-- **Rollback:** is this change reversible in production? (Forward-only migration? Feature flag? Data-shape change?)
-- **Concurrent edit:** if two users / workers / requests hit this code path simultaneously, does it produce the correct result?
+### Lens 1 — The Architect
 
-Stage 2 reviewers tend to go line-by-line. You go scenario-by-scenario.
+*"Will this survive production and still make sense a year from now?"*
 
-### Failure-mode gaps
-- A `try / catch` exists; does the catch path degrade gracefully, or does it silently drop work?
-- An API call retries 3 times, then what? Dead-letter? Surface to user? Silent drop?
-- The new code logs an error; who sees the log? Is anyone paging on it?
-- If this feature is silently broken in production (wrong result, no error), how long until someone notices?
+You are looking at shape, boundaries, and what happens at scale or under partition. You do not count lines; you count coupling and decision-stress.
 
-### Hyrum's Law leakage
-- Does the diff introduce an observable detail (field ordering, error message text, timestamp format, status-code choice) that integrations may start depending on?
-- Will removing it later silently break them?
-- Is the "internal" API path unprefixed / unlabeled in a way that invites external consumption?
+- **Decision stress (per material change).** For each material change, walk through four scenarios:
+  - **Load** — at expected rps, does this survive? At 5× rps?
+  - **Partition** — if the upstream API / DB / cache is partitioned (down, slow, returns 503), what does this code do?
+  - **Rollback** — is this change reversible in production? Forward-only migration? Feature flag? Data-shape change?
+  - **Concurrent edit** — if two users / workers / requests hit this code path simultaneously, does it produce the correct result?
+- **Cross-module coupling.** Does the diff introduce an implicit dependency that will be hard to untangle later — shared mutable state, cross-domain imports, a type that lives in one module but is imported by five? Does the Proposed Architecture (in the plan) describe this coupling? If not, it is silent — flag it.
+- **Hyrum's Law leakage.** Does the diff introduce an observable detail (field ordering, error message text, timestamp format, status-code choice) that integrations may start depending on? Will removing it later silently break them? Is the "internal" API path unprefixed / unlabeled in a way that invites external consumption?
 
-### Cross-module coupling
-- Does the diff introduce an implicit dependency that will be hard to untangle later? (Shared mutable state, cross-domain imports, a type that lives in one module but is imported by five.)
-- Does the Proposed Architecture (in the plan) describe this coupling? If not, it is silent — flag it.
+Stage 2 reviewers tend to go line-by-line. The Architect goes scenario-by-scenario and boundary-by-boundary.
 
-### Observability + operability gaps
-- Can you tell from logs/metrics alone that this code path is broken, without a customer report?
-- Are the new errors labeled distinguishably (client-retryable vs server-retryable vs human-escalation)?
-- Is there a metric for the critical path (request count, p95 latency, error rate)?
-- Who pages on what? Is the runbook updated (or referenced, or at least assumed)?
+### Lens 2 — The Skeptic
 
-### Simplification pressure
-- Is there a piece of the diff that does not earn its keep? A new helper, class, abstraction that could be inlined?
-- Is there a conditional branch whose "else" path is dead in practice?
-- Is there a layer of indirection (adapter, wrapper, factory) with only one implementation and no foreseeable second?
+*"What is this code assuming that I have not seen proved?"*
 
-Flag simplification only when you can name the specific cost of the unnecessary complexity — otherwise it's preference.
+You are looking at the gap between what the diff says and what the diff needs. Every unstated assumption is a future incident.
 
-### Alternative blindness
-- Is there a credible implementation choice the diff did not consider? Name it briefly; explain in one sentence why it might be better.
-- This is NOT "I would have done X." This is "the diff picked A; B is standard in this codebase / plan / industry and neither doc notes why A."
+- **Unstated assumptions.** What does the diff silently assume — single-tenant, single-region, same-process, small-table, trusted input, idempotent upstream, available third-party, bounded user behaviour? Pick one assumption that is NOT stated in comments or plan; describe the scenario where it breaks; name the observable consequence.
+- **Failure-mode gaps.** A `try / catch` exists — does the catch path degrade gracefully, or does it silently drop work? An API call retries three times, then what — dead-letter, surface-to-user, silent drop? The new code logs an error — who sees the log, and is anyone paging on it? If this feature is silently broken in production (wrong result, no error), how long until someone notices?
+- **Observability + operability gaps.** Can you tell from logs/metrics alone that this code path is broken, without a customer report? Are new errors labeled distinguishably (client-retryable vs server-retryable vs human-escalation)? Is there a metric for the critical path (request count, p95 latency, error rate)? Who pages on what — is the runbook updated, referenced, or at least assumed?
+
+The Skeptic's signature move is turning a "works on my machine" into a specific scenario with a named consequence.
+
+### Lens 3 — The Minimalist
+
+*"Does every piece of this diff earn its keep?"*
+
+You are looking for the opposite of what Lens 1 and 2 look for — not what is missing, but what should not be there. Complexity is a tax; this lens asks whether it was paid for.
+
+- **Simplification pressure.** Is there a piece of the diff that does not earn its keep — a new helper, class, or abstraction that could be inlined? A conditional branch whose "else" path is dead in practice? A layer of indirection (adapter, wrapper, factory) with only one implementation and no foreseeable second?
+- **Alternative blindness.** Is there a credible implementation choice the diff did not consider? Name it briefly; explain in one sentence why it might be better. This is NOT "I would have done X." This is "the diff picked A; B is standard in this codebase / plan / industry and neither doc notes why A."
+
+Flag Minimalist findings only when you can name the specific cost of the unnecessary complexity — a concrete maintenance burden, a future migration pain, a measurable readability drop. Preference is not signal.
 
 ## Output format
 
@@ -79,16 +75,11 @@ Flag simplification only when you can name the specific cost of the unnecessary 
 {{findings payload per references/findings-schema.md — reviewer: "adversarial"}}
 ```
 
-## Techniques run
+## Lenses run
 
-- **Unstated assumptions:** <1-line summary — material finding AF-N | no material concern>
-- **Decision stress (load / partition / rollback / concurrency):** <...>
-- **Failure-mode gaps:** <...>
-- **Hyrum's Law:** <...>
-- **Cross-module coupling:** <...>
-- **Observability:** <...>
-- **Simplification:** <...>
-- **Alternative blindness:** <...>
+- **Architect (decision stress / cross-module coupling / Hyrum's Law):** <1-line summary — material finding AF-N | no material concern>
+- **Skeptic (unstated assumptions / failure-mode gaps / observability):** <1-line summary — material finding AF-N | no material concern>
+- **Minimalist (simplification pressure / alternative blindness):** <1-line summary — material finding AF-N | no material concern>
 
 ## Notes
 
@@ -117,8 +108,8 @@ The JSON block MUST conform to `skills/code-review/references/findings-schema.md
 
 A good adversarial finding makes the author say *"damn, I hadn't thought about that scenario."* A bad one makes them say *"yeah, that's a general concern."*
 
-A Deep diff that survives Stage 2 with zero adversarial findings is suspicious — you likely under-scrutinized. Re-read the diff's most-touched file from scratch, run the four decision-stress scenarios against the two biggest changes, and try again.
+A Deep diff that survives Stage 2 with zero adversarial findings is suspicious — you likely under-scrutinized. Re-read the diff's most-touched file from scratch, run the Architect lens's four decision-stress scenarios against the two biggest changes, then pass the Skeptic lens over each `try/catch` and each error path, then try again.
 
 A Deep diff where you produce 6+ adversarial findings is ALSO suspicious — you are likely padding or duplicating Stage 2. Re-check; prune.
 
-If you genuinely have nothing that Stage 2 missed, return `findings: []` with a `positives` line: *"Stage 2 coverage looks complete — no additional failure mode surfaced by the four decision-stress scenarios."* That is a valid and valuable result.
+If all three lenses genuinely leave nothing that Stage 2 missed, return `findings: []` with a `positives` line: *"Three-lens pass clean — no additional failure mode surfaced by decision stress (Architect), assumption / failure-mode audit (Skeptic), or simplification / alternative probe (Minimalist)."* That is a valid and valuable result.

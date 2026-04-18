@@ -314,6 +314,14 @@ Status values: `verified`, `mismatch — still present`, `still present (expecte
 
 **6.8.5 No source-of-truth mutation.** Phase 6.8 never edits the prior `## Fixes applied` sections, the original review body, or any sibling plan document. All verification outcomes live inside the new `## Re-review <DATE>` section only. The original review and its appended Fixes-applied history remain immutable.
 
+### Phase 6.9 — Lead Judgment (adjudication)
+
+After 6.1–6.8 finish, the reviewers have each spoken in their lane. The orchestrator now speaks **last** — one pass over every surfaced finding (main tables + Suppressed; never Pre-existing) with a single decision each: `accept` · `downgrade P_X → P_Y` · `upgrade P_X → P_Y` · `reject → Suppressed` · `merge-into F-M`. Every reshaping decision carries a one-line rationale tied to evidence strength, cross-reviewer `seen_by` count, a plan anchor, an adversarial lens, or a prior-claim mismatch.
+
+**Rules.** Default is **accept** — reviewers are trusted; the orchestrator resolves conflict and softens noise, it does not second-guess lanes. Downgrade when evidence is thinner than severity implies (P1 with single reviewer, `confidence 0.62`, no plan anchor → P2 candidate). Upgrade when agreement or claim-mismatch corroboration is stronger than merged confidence (P2 with `seen_by: [quality, security]` + `claim_mismatch: true` → P1 candidate). Reject only when a reviewer stepped out of lane or when two findings are genuinely the same finding dedup missed — rejected findings move to Suppressed with the rationale; never silently dropped.
+
+**Render.** Reshaping entries (downgrade / upgrade / reject / merge) are rendered as a compact `### Lead adjudication` subsection directly under the severity-grouped findings. Plain accepts may be omitted. Adjudication is not a second review: no new code reads, no invented findings. If a decision requires new evidence, accept at the reviewer's severity and let the author decide.
+
 ### Phase 7 — Self-review checklist (MANDATORY, emit to user)
 
 Before Gate, emit with `✓` or `✗` on each line:
@@ -337,6 +345,7 @@ Before Gate, emit with `✓` or `✗` on each line:
 - [ ] Diff inventory built; files-not-reviewed (if any) flagged
 - [ ] No reviewer output silently discarded; malformed returns noted in Stage results
 - [ ] Every P0 and P1 has a concrete suggested fix (not "consider refactoring")
+- [ ] Phase 6.9 Lead adjudication ran; every reshaping decision (downgrade / upgrade / reject / merge) carries a one-line rationale tied to evidence, `seen_by`, plan anchor, adversarial lens, or claim-mismatch status
 - [ ] No `TODO`, `[TBD]`, placeholder text in the proposed artifact
 - [ ] No code was edited, staged, committed, or pushed by the skill
 
@@ -436,6 +445,7 @@ Do NOT invoke any implementation skill. Do NOT edit, commit, or push. The skill 
 See `references/anti-patterns.md`. Highlights:
 
 - **"Just apply the safe_auto fixes."** No. Pure reporter. Fixes are the author's decision.
+- **Skipping Lead adjudication because every finding looks fine.** Plain accepts are fine; the discipline is running the pass. Without it, the author reads seven reviewers' opinions instead of one coherent review.
 - **Running reviewers serially "to save tokens".** Parallel is the design. Serial is slower AND costs more context.
 - **Skipping the HARD GATE.** The artifact is never written without approval. Skipping breaks the contract.
 - **Padding findings.** Clean passes are valid and expected. Synthetic findings corrupt the signal-to-noise ratio.
@@ -459,6 +469,8 @@ STOP if you catch yourself doing any of these:
 - Your final artifact has >30 findings on Lightweight scope — noise.
 - Your final artifact has 0 findings on Deep scope — likely under-scrutinized.
 - You silently dropped a low-confidence finding instead of moving it to Suppressed.
+- You adjudicated a finding with no rationale, or with a rationale that does not reference evidence, `seen_by`, plan anchor, adversarial lens, or claim-mismatch status.
+- Lead adjudication deleted a finding (reject must move to Suppressed, never drop).
 - You merged two findings with different `intent` strings — probably a merge bug.
 - You patched `PRD.md` / `SPEC.md` / `DIAGNOSIS.md` — pure reporter, never.
 - You staged, committed, or pushed anything — pure reporter, never.

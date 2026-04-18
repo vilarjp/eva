@@ -1,6 +1,6 @@
 {
   "name": "eva",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "Ten composable, scope-adaptive Claude Code skills for compound engineering: reverse-engineer an unfamiliar file (local or URL) into a structural map, brainstorm a PRD, spec the design, cross-review the pair, diagnose bugs, execute via red-green-refactor TDD, review the diff with a multi-reviewer pipeline, triage incoming PR review feedback into actionable verdicts, commit-push with safety gates, and capture durable learnings — each skill produces a single cold-readable artifact (TEARDOWN / PRD / SPEC / REVISION / DIAGNOSIS / EXECUTION / CODE-REVIEW / PR-FEEDBACK / SOLUTIONS) and is gated on explicit user approval before any write. Refuses protected branches, never opens PRs, never `git add -A`, never `--force`, never `--no-verify`, never commits secrets, never posts to a PR on the author's behalf.",
   "author": {
     "name": "João Vilar",

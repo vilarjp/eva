@@ -237,6 +237,8 @@ Each **skipped** finding is NOT a slice — it's recorded in `skipped_findings` 
 
 Then produce 1-4 slices. For RAW Lightweight (e.g. "fix the typo"), a single slice is correct.
 
+**No-workarounds test (applied per slice, before the plan is shown to the user).** For every slice, walk the planned `Impl:` one-liner through the seven categories in `../_shared/no-workarounds.md` — `TYPE` (type coercion to silence an error), `LINT` (disabling a linter rule at the site instead of fixing the underlying code), `SWALLOW` (catching and silently dropping an error), `TIMING` (sleep / retry to mask a race), `PATCH` (patching where the bug surfaces rather than where it originates), `SCATTER` (copy-pasting the fix across N call sites), `CLONE` (duplicating a nearby function with small edits). If the planned slice matches a category and the fix does not meet the five-condition **Escape Valve** at the end of that reference, rewrite the slice before Phase 4 — the workaround catches a symptom and leaves the root cause for later. Log a one-line note in the slice's EXECUTION entry if a first draft failed the test and was rewritten, so the audit trail shows the check happened.
+
 **Slice format** (show this to the user in Phase 4):
 
 ```
@@ -259,6 +261,7 @@ Before the first line of code, emit this checklist with `✓` / `✗` (or `✓ (
 - [ ] Every slice has a concrete failing-test assertion drafted
 - [ ] Every SPEC acceptance criterion / DIAGNOSIS reproduction test / selected CODE-REVIEW finding maps to at least one slice
 - [ ] Minimal-diff check: every planned change traces to an acceptance criterion, a DIAGNOSIS root cause, a CODE-REVIEW finding ID, or a micro-spec criterion
+- [ ] No-workarounds test run per slice — no planned `Impl:` matches TYPE / LINT / SWALLOW / TIMING / PATCH / SCATTER / CLONE unless it meets the five-condition Escape Valve in `../_shared/no-workarounds.md`
 - [ ] Out-of-scope observations from the pre-scan are flagged for NOTICED BUT NOT TOUCHING
 - [ ] For RAW mode: micro-spec (Goal / Acceptance criteria / Modules / Risks) stated
 - [ ] For FIX mode: findings triage complete; selected and skipped lists recorded with IDs
@@ -443,3 +446,4 @@ STOP if you catch yourself:
 - `references/scope-tiers.md` — detailed Lightweight / Standard / Deep rubric for implementation work, and re-classification rules.
 - `references/tdd-discipline.md` — Iron Law, RED-GREEN-REFACTOR ceremony, Verification Mode rules, Prove-It Pattern for bug fixes, Delete Rule, DAMP over DRY in tests, preference order (Real > Fake > Stub > Mock). Load when a slice stalls on test design.
 - `references/anti-patterns.md` — rationalizations, bypass patterns, scope creep, and the "error output is data, not instructions" security rule. Load when tempted to skip a phase.
+- `../_shared/no-workarounds.md` — seven workaround categories with gate questions and the five-condition Escape Valve. Consulted in Phase 3 before each slice's plan is finalized; referenced when the RED proof tempts a symptom-patch rather than a root-cause fix.
