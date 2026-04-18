@@ -9,19 +9,12 @@
 **Twelve composable, scope-adaptive skills that turn an idea — or a bug, a PR,**
 **an unfamiliar bundle, a rough Jira card — into a durable artifact.**
 
-_Plan · Design · Diagnose · Audit · Build · Review · Triage · Ship · Remember._
+<sub>For engineers who ship with Claude Code and want durable artifacts, not just chat history.</sub>
 
 <br />
 
-[![Version](https://img.shields.io/badge/version-0.12.0-brightgreen?style=flat-square)](.claude-plugin/plugin.json)
-[![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
-[![Claude Code Plugin](https://img.shields.io/badge/claude%20code-plugin-orange?style=flat-square)](https://docs.claude.com/en/docs/claude-code/plugins)
-[![Skills](https://img.shields.io/badge/skills-12-purple?style=flat-square)](#the-twelve-skills)
-[![Sub-agents](https://img.shields.io/badge/sub--agents-11-teal?style=flat-square)](#the-eleven-sub-agents)
-
-<br />
-
-```
+```bash
+# inside Claude Code
 /plugin marketplace add vilarjp/eva
 /plugin install eva@eva
 ```
@@ -95,12 +88,16 @@ The skills compose into pipelines — idea → **PRD** → **SPEC** → **REVISI
 </tr>
 </thead>
 <tbody>
+
+<tr><td colspan="4" align="left"><br/><sub><strong>01 · ROUTE</strong> — pick the right pipeline</sub></td></tr>
 <tr>
 <td><a href="skills/eva/"><img src="https://img.shields.io/badge/%2Feva-router-f97316?style=flat-square&labelColor=1e293b" alt="/eva — router"/></a></td>
 <td>Which skill should I run?</td>
 <td>any input — URL, path, card, free-text</td>
 <td><em>routing plan (inline, no file)</em></td>
 </tr>
+
+<tr><td colspan="4" align="left"><br/><sub><strong>02 · PLAN</strong> — before you write code</sub></td></tr>
 <tr>
 <td><a href="skills/teardown/"><img src="https://img.shields.io/badge/%2Fteardown-archaeology-94a3b8?style=flat-square&labelColor=1e293b" alt="/teardown — archaeology"/></a></td>
 <td>What does this unfamiliar file do?</td>
@@ -125,6 +122,8 @@ The skills compose into pipelines — idea → **PRD** → **SPEC** → **REVISI
 <td>a PRD + SPEC pair</td>
 <td><code>REVISION.md</code> (+ patches on approval)</td>
 </tr>
+
+<tr><td colspan="4" align="left"><br/><sub><strong>03 · INVESTIGATE</strong> — understand what's already there</sub></td></tr>
 <tr>
 <td><a href="skills/diagnosis/"><img src="https://img.shields.io/badge/%2Fdiagnosis-debug-ef4444?style=flat-square&labelColor=1e293b" alt="/diagnosis — debug"/></a></td>
 <td>What broke, why, how to prove it?</td>
@@ -137,6 +136,8 @@ The skills compose into pipelines — idea → **PRD** → **SPEC** → **REVISI
 <td>stable module (static snapshot)</td>
 <td><code>AUDIT.md</code></td>
 </tr>
+
+<tr><td colspan="4" align="left"><br/><sub><strong>04 · BUILD</strong> — ship it safely</sub></td></tr>
 <tr>
 <td><a href="skills/execute/"><img src="https://img.shields.io/badge/%2Fexecute-build-22c55e?style=flat-square&labelColor=1e293b" alt="/execute — build"/></a></td>
 <td>Ship the code.</td>
@@ -161,34 +162,71 @@ The skills compose into pipelines — idea → **PRD** → **SPEC** → **REVISI
 <td>working tree</td>
 <td><em>commits + push (no markdown)</em></td>
 </tr>
+
+<tr><td colspan="4" align="left"><br/><sub><strong>05 · REMEMBER</strong> — compound the learning</sub></td></tr>
 <tr>
 <td><a href="skills/solutions/"><img src="https://img.shields.io/badge/%2Fsolutions-memory-a855f7?style=flat-square&labelColor=1e293b" alt="/solutions — memory"/></a></td>
 <td>What's worth remembering?</td>
 <td>the whole <code>docs/&lt;date&gt;-&lt;slug&gt;/</code> folder</td>
 <td><code>SOLUTIONS.md</code></td>
 </tr>
+
 </tbody>
 </table>
-
-<div align="center">
-
-<sub>
-<img src="https://img.shields.io/badge/planning-0c4a6e?style=flat-square&labelColor=38bdf8"/>&nbsp;
-<img src="https://img.shields.io/badge/archaeology-1e293b?style=flat-square&labelColor=94a3b8"/>&nbsp;
-<img src="https://img.shields.io/badge/investigate-7f1d1d?style=flat-square&labelColor=fca5a5"/>&nbsp;
-<img src="https://img.shields.io/badge/audit-78350f?style=flat-square&labelColor=fbbf24"/>&nbsp;
-<img src="https://img.shields.io/badge/build-14532d?style=flat-square&labelColor=86efac"/>&nbsp;
-<img src="https://img.shields.io/badge/review-581c87?style=flat-square&labelColor=d8b4fe"/>&nbsp;
-<img src="https://img.shields.io/badge/external-831843?style=flat-square&labelColor=f9a8d4"/>&nbsp;
-<img src="https://img.shields.io/badge/ship-064e3b?style=flat-square&labelColor=6ee7b7"/>&nbsp;
-<img src="https://img.shields.io/badge/memory-3730a3?style=flat-square&labelColor=c7d2fe"/>
-</sub>
-
-</div>
 
 </div>
 
 <sub>Every artifact lives at <code>docs/YYYY-MM-DD-&lt;slug&gt;/&lt;ARTIFACT&gt;.md</code>, carries <code>status: approved</code> frontmatter, and is cold-readable by a future session.</sub>
+
+---
+
+## See a real artifact
+
+<details>
+<summary><strong>Sample PRD — click to expand a 30-line slice of a real artifact</strong></summary>
+
+<br />
+
+````markdown
+---
+title: Persisted checkout sessions
+slug: 2026-04-16-persisted-checkout
+status: approved
+scope: standard
+---
+
+# PRD — Persisted checkout sessions
+
+## Problem Statement
+
+Mobile users who lose connectivity mid-checkout lose their cart on reconnect.
+3.4 % of mobile sessions drop here (Amplitude funnel `checkout_mobile_2026_03`).
+
+## Goals / Non-Goals
+
+- **Goal** — checkout state survives a 30-minute disconnect.
+- **Goal** — no change to the desktop flow.
+- **Non-goal** — cross-device session sync.
+
+## Options (2–3 genuinely distinct)
+
+- **A — localStorage hydration on reconnect.** Pros: zero infra. Cons: stale
+  data when price / inventory mutate mid-session.
+- **B — server-side session tied to the device token.** Pros: reuses existing
+  session cache (see `AUDIT.md#session-cache`). Cons: one extra table write
+  per cart mutation.
+- **C — optimistic UI with periodic sync.** Pros: smooth UX. Cons: polling
+  cost; reconciliation complexity on conflict.
+
+## Recommended Direction
+
+**Option B.** Matches existing session infra, avoids the stale-data class in A,
+strictly cheaper than C's polling. Trade-off accepted: one write per mutation.
+````
+
+Every artifact follows this shape — frontmatter with `status: approved` and `scope`, short sections, evidence anchored to the codebase (`AUDIT.md#session-cache`), alternatives listed explicitly, trade-offs named out loud. A future session reads it cold, without the original conversation.
+
+</details>
 
 ---
 
@@ -197,30 +235,25 @@ The skills compose into pipelines — idea → **PRD** → **SPEC** → **REVISI
 ```mermaid
 %%{init: {'theme':'base','themeVariables':{'fontFamily':'ui-sans-serif, system-ui'}}}%%
 flowchart LR
-    classDef input      fill:#1f2937,stroke:#9ca3af,color:#f3f4f6,stroke-dasharray:3 3
-    classDef plan       fill:#0c4a6e,stroke:#38bdf8,color:#e0f2fe,stroke-width:1.5px
-    classDef archaeo    fill:#1e293b,stroke:#94a3b8,color:#e2e8f0,stroke-width:1.5px
-    classDef investigate fill:#7f1d1d,stroke:#fca5a5,color:#fee2e2,stroke-width:1.5px
-    classDef audit      fill:#78350f,stroke:#fbbf24,color:#fef3c7,stroke-width:1.5px
-    classDef build      fill:#14532d,stroke:#86efac,color:#dcfce7,stroke-width:1.5px
-    classDef review     fill:#581c87,stroke:#d8b4fe,color:#f3e8ff,stroke-width:1.5px
-    classDef external   fill:#831843,stroke:#f9a8d4,color:#fce7f3,stroke-width:1.5px
-    classDef ship       fill:#064e3b,stroke:#6ee7b7,color:#d1fae5,stroke-width:1.5px
-    classDef memory     fill:#3730a3,stroke:#c7d2fe,color:#e0e7ff,stroke-width:1.5px
+    classDef input fill:#1f2937,stroke:#9ca3af,color:#f3f4f6,stroke-dasharray:3 3
+    classDef plan  fill:#1e3a8a,stroke:#60a5fa,color:#dbeafe,stroke-width:1.5px
+    classDef inv   fill:#7c2d12,stroke:#fb923c,color:#ffedd5,stroke-width:1.5px
+    classDef build fill:#14532d,stroke:#86efac,color:#dcfce7,stroke-width:1.5px
+    classDef mem   fill:#3730a3,stroke:#c7d2fe,color:#e0e7ff,stroke-width:1.5px
 
     idea(["idea · bug · PR · unknown file"]):::input
 
-    teardown["/teardown"]:::archaeo
+    teardown["/teardown"]:::plan
     prd["/prd"]:::plan
     spec["/spec"]:::plan
     revision["/revision"]:::plan
-    diagnosis["/diagnosis"]:::investigate
-    audit["/audit"]:::audit
+    diagnosis["/diagnosis"]:::inv
+    audit["/audit"]:::inv
     execute["/execute"]:::build
-    review["/code-review"]:::review
-    prfb["/pr-feedback"]:::external
-    push["/commit-push"]:::ship
-    solutions["/solutions"]:::memory
+    review["/code-review"]:::build
+    prfb["/pr-feedback"]:::build
+    push["/commit-push"]:::build
+    solutions["/solutions"]:::mem
 
     idea --> teardown
     idea --> prd
@@ -243,6 +276,8 @@ flowchart LR
     push --> prfb
     prfb -. must-fix .-> execute
 ```
+
+<sub align="center"><img src="https://img.shields.io/badge/plan-1e3a8a?style=flat-square&labelColor=60a5fa"/>&nbsp;<img src="https://img.shields.io/badge/investigate-7c2d12?style=flat-square&labelColor=fb923c"/>&nbsp;<img src="https://img.shields.io/badge/build-14532d?style=flat-square&labelColor=86efac"/>&nbsp;<img src="https://img.shields.io/badge/remember-3730a3?style=flat-square&labelColor=c7d2fe"/></sub>
 
 <details>
 <summary><strong>Five signature loops — click to expand</strong></summary>
@@ -269,21 +304,21 @@ flowchart LR
 <tr>
 <td width="33%" valign="top">
 
-<img src="https://img.shields.io/badge/%E2%80%89%20verify%20before%20claiming%20%E2%80%89-0ea5e9?style=for-the-badge&labelColor=0c4a6e" alt="verify before claiming"/>
+<img src="https://img.shields.io/badge/%E2%97%86-verify%20before%20claiming-0f172a?style=for-the-badge&labelColor=475569" alt="verify before claiming"/>
 
 Every claim about the codebase, the diff, a source document, or a PR comment is anchored to a specific read. Unverified claims are labeled `(unverified)` — never invented.
 
 </td>
 <td width="33%" valign="top">
 
-<img src="https://img.shields.io/badge/%E2%80%89%20hard%20gates%20%E2%80%89-ef4444?style=for-the-badge&labelColor=7f1d1d" alt="hard gates"/>
+<img src="https://img.shields.io/badge/%E2%97%86-hard%20gates-0f172a?style=for-the-badge&labelColor=475569" alt="hard gates"/>
 
 No artifact is written until the user explicitly approves it. `/execute` has a second gate: no code lands unless the integration gate (full suite + lint + types) runs green in the same turn.
 
 </td>
 <td width="33%" valign="top">
 
-<img src="https://img.shields.io/badge/%E2%80%89%20scope%20adaptive%20%E2%80%89-f59e0b?style=for-the-badge&labelColor=78350f" alt="scope-adaptive"/>
+<img src="https://img.shields.io/badge/%E2%97%86-scope%20adaptive-0f172a?style=for-the-badge&labelColor=475569" alt="scope-adaptive"/>
 
 Lightweight / Standard / Deep tiers tune the depth of every phase — a one-liner doesn't get a Mermaid diagram; a cross-module refactor does.
 
@@ -292,21 +327,21 @@ Lightweight / Standard / Deep tiers tune the depth of every phase — a one-line
 <tr>
 <td valign="top">
 
-<img src="https://img.shields.io/badge/%E2%80%89%20append%20only%20%E2%80%89-6366f1?style=for-the-badge&labelColor=3730a3" alt="append-only"/>
+<img src="https://img.shields.io/badge/%E2%97%86-append%20only-0f172a?style=for-the-badge&labelColor=475569" alt="append-only"/>
 
 Re-runs append `## Re-review`, `## Re-audit`, `## Re-triage`, `## Re-run`, `## Post-Release Bug Fix`, `## Fixes applied`, `## Refactors applied`. Prior artifact content is history.
 
 </td>
 <td valign="top">
 
-<img src="https://img.shields.io/badge/%E2%80%89%20pure%20reporters%20%E2%80%89-22c55e?style=for-the-badge&labelColor=14532d" alt="pure reporters"/>
+<img src="https://img.shields.io/badge/%E2%97%86-pure%20reporters-0f172a?style=for-the-badge&labelColor=475569" alt="pure reporters"/>
 
 `/audit`, `/code-review`, `/pr-feedback`, `/solutions` never edit source. `/teardown`, `/prd`, `/spec`, `/revision`, `/diagnosis` don't either. Only `/execute` writes production code; only `/commit-push` pushes.
 
 </td>
 <td valign="top">
 
-<img src="https://img.shields.io/badge/%E2%80%89%20refuses%20list%20%E2%80%89-dc2626?style=for-the-badge&labelColor=450a0a" alt="refuses-list"/>
+<img src="https://img.shields.io/badge/%E2%97%86-refuses%20list-0f172a?style=for-the-badge&labelColor=475569" alt="refuses-list"/>
 
 Protected branches, `git add -A`, `--force`, `--no-verify`, secret-pattern commits, auto-posting PR comments, transitioning Jira state — every skill refuses, even under auto-mode or user insistence.
 
@@ -345,8 +380,8 @@ Copy any of `skills/<name>/` into your project's `.claude/skills/` directory —
 
 The twelve skills share a common shape: type the slash command (optionally with a free-text hint), answer up to ~3 clarifying questions, approve the self-review checklist, approve the HARD GATE. Every skill works from natural language too — *"diagnose this bug"*, *"audit src/checkout"*, *"ship my changes"* all route to the right skill.
 
-<details>
-<summary><code><strong>/eva</strong></code> — the routing brain</summary>
+<details open>
+<summary><img src="https://img.shields.io/badge/_-_-f97316?style=flat-square&labelColor=f97316" height="10" alt=""/>&nbsp;&nbsp;<code><strong>/eva</strong></code> — the routing brain</summary>
 
 <br />
 
@@ -366,7 +401,7 @@ Produces a **Routing Plan** (inline — no file) with: _Understood_, _Recommenda
 </details>
 
 <details>
-<summary><code><strong>/teardown</strong></code> — reverse-engineer an unfamiliar file</summary>
+<summary><img src="https://img.shields.io/badge/_-_-94a3b8?style=flat-square&labelColor=94a3b8" height="10" alt=""/>&nbsp;&nbsp;<code><strong>/teardown</strong></code> — reverse-engineer an unfamiliar file</summary>
 
 <br />
 
@@ -383,7 +418,7 @@ Runs a **hydration ladder** — source-map discovery → beautify → optional `
 </details>
 
 <details>
-<summary><code><strong>/prd</strong></code> — turn an idea into a PRD</summary>
+<summary><img src="https://img.shields.io/badge/_-_-06b6d4?style=flat-square&labelColor=06b6d4" height="10" alt=""/>&nbsp;&nbsp;<code><strong>/prd</strong></code> — turn an idea into a PRD</summary>
 
 <br />
 
@@ -398,7 +433,7 @@ Asks up to 5 clarifying questions, one at a time. Approves via self-review check
 </details>
 
 <details>
-<summary><code><strong>/spec</strong></code> — turn an idea or PRD into a tech spec</summary>
+<summary><img src="https://img.shields.io/badge/_-_-3b82f6?style=flat-square&labelColor=3b82f6" height="10" alt=""/>&nbsp;&nbsp;<code><strong>/spec</strong></code> — turn an idea or PRD into a tech spec</summary>
 
 <br />
 
@@ -413,7 +448,7 @@ On Standard/Deep, dispatches three adversarial sub-agents in parallel — [`spec
 </details>
 
 <details>
-<summary><code><strong>/revision</strong></code> — cross-check a PRD + SPEC pair</summary>
+<summary><img src="https://img.shields.io/badge/_-_-6366f1?style=flat-square&labelColor=6366f1" height="10" alt=""/>&nbsp;&nbsp;<code><strong>/revision</strong></code> — cross-check a PRD + SPEC pair</summary>
 
 <br />
 
@@ -429,7 +464,7 @@ A clean pass still writes REVISION.md (audit record); PRD + SPEC stay untouched.
 </details>
 
 <details>
-<summary><code><strong>/diagnosis</strong></code> — investigate a bug end-to-end</summary>
+<summary><img src="https://img.shields.io/badge/_-_-ef4444?style=flat-square&labelColor=ef4444" height="10" alt=""/>&nbsp;&nbsp;<code><strong>/diagnosis</strong></code> — investigate a bug end-to-end</summary>
 
 <br />
 
@@ -446,7 +481,7 @@ Writes `docs/<DATE>-<slug>/DIAGNOSIS.md` with: Bug description · Environment ·
 </details>
 
 <details>
-<summary><code><strong>/audit</strong></code> — survey structural debt on stable code</summary>
+<summary><img src="https://img.shields.io/badge/_-_-f59e0b?style=flat-square&labelColor=f59e0b" height="10" alt=""/>&nbsp;&nbsp;<code><strong>/audit</strong></code> — survey structural debt on stable code</summary>
 
 <br />
 
@@ -469,7 +504,7 @@ On Deep scope, dispatches **3–5 parallel `Explore` agents in a single message*
 </details>
 
 <details>
-<summary><code><strong>/execute</strong></code> — write the code (FEATURE / BUG / FIX / REFACTOR / RAW modes)</summary>
+<summary><img src="https://img.shields.io/badge/_-_-22c55e?style=flat-square&labelColor=22c55e" height="10" alt=""/>&nbsp;&nbsp;<code><strong>/execute</strong></code> — write the code (FEATURE / BUG / FIX / REFACTOR / RAW modes)</summary>
 
 <br />
 
@@ -497,7 +532,7 @@ In **REFACTOR mode**, the same triage runs against AUDIT.md — **Bugs surfaced*
 </details>
 
 <details>
-<summary><code><strong>/code-review</strong></code> — multi-reviewer pre-merge audit of the current diff</summary>
+<summary><img src="https://img.shields.io/badge/_-_-8b5cf6?style=flat-square&labelColor=8b5cf6" height="10" alt=""/>&nbsp;&nbsp;<code><strong>/code-review</strong></code> — multi-reviewer pre-merge audit of the current diff</summary>
 
 <br />
 
@@ -522,7 +557,7 @@ Findings merge via fingerprint (`normalize(file) + line_bucket(line, ±3) + norm
 </details>
 
 <details>
-<summary><code><strong>/pr-feedback</strong></code> — triage incoming PR review comments</summary>
+<summary><img src="https://img.shields.io/badge/_-_-ec4899?style=flat-square&labelColor=ec4899" height="10" alt=""/>&nbsp;&nbsp;<code><strong>/pr-feedback</strong></code> — triage incoming PR review comments</summary>
 
 <br />
 
@@ -550,7 +585,7 @@ Uses **GraphQL `reviewThreads`** (so `isResolved` / `isOutdated` / reply chains 
 </details>
 
 <details>
-<summary><code><strong>/commit-push</strong></code> — ship the working tree safely</summary>
+<summary><img src="https://img.shields.io/badge/_-_-10b981?style=flat-square&labelColor=10b981" height="10" alt=""/>&nbsp;&nbsp;<code><strong>/commit-push</strong></code> — ship the working tree safely</summary>
 
 <br />
 
@@ -576,7 +611,7 @@ Produces up to three Conventional-Commits commits on a human-confirmed feature b
 </details>
 
 <details>
-<summary><code><strong>/solutions</strong></code> — distil durable learnings from a finished pipeline</summary>
+<summary><img src="https://img.shields.io/badge/_-_-a855f7?style=flat-square&labelColor=a855f7" height="10" alt=""/>&nbsp;&nbsp;<code><strong>/solutions</strong></code> — distil durable learnings from a finished pipeline</summary>
 
 <br />
 
@@ -661,152 +696,116 @@ Every SKILL.md is under ~500 lines (progressive disclosure — heavy material li
 
 ### Feature
 
+```mermaid
+%%{init: {'theme':'base','themeVariables':{'fontFamily':'ui-sans-serif, system-ui'}}}%%
+flowchart LR
+    classDef input fill:#1f2937,stroke:#9ca3af,color:#f3f4f6,stroke-dasharray:3 3
+    classDef plan  fill:#1e3a8a,stroke:#60a5fa,color:#dbeafe,stroke-width:1.5px
+    classDef build fill:#14532d,stroke:#86efac,color:#dcfce7,stroke-width:1.5px
+    classDef mem   fill:#3730a3,stroke:#c7d2fe,color:#e0e7ff,stroke-width:1.5px
+
+    idea(["idea"]):::input
+    prd["/prd"]:::plan
+    spec["/spec"]:::plan
+    rev["/revision"]:::plan
+    exec["/execute"]:::build
+    review["/code-review"]:::build
+    push["/commit-push"]:::build
+    sol["/solutions"]:::mem
+
+    idea --> prd --> spec --> rev --> exec --> review --> push --> sol
 ```
-idea ─▶ /prd ─▶ PRD.md ─▶ /spec ─▶ SPEC.md ─▶ /revision ─▶ REVISION.md
-                                                      │
-                                                      ▼  on approval,
-                                            patches PRD.md + SPEC.md
-                                            with  ## Revision <DATE>
-                                                      │
-                                                      ▼
-                               /execute ─▶ EXECUTION.md + code + commits
-                                                      │  (appends ## Implemented
-                                                      │   to SPEC.md)
-                                                      ▼
-                           /code-review ─▶ CODE-REVIEW.md
-                                                      │
-                                                      ▼
-                           /commit-push ─▶ commits + push
-                                                      │  (appends ## Commits
-                                                      │   to EXECUTION.md)
-                                                      ▼
-                              /solutions ─▶ SOLUTIONS.md
-```
+
+<sub>Side-effects: <code>/revision</code> patches PRD + SPEC with <code>## Revision</code>. <code>/execute</code> appends <code>## Implemented</code> to SPEC. <code>/commit-push</code> appends <code>## Commits</code> to EXECUTION.</sub>
 
 ### Bug
 
+```mermaid
+%%{init: {'theme':'base','themeVariables':{'fontFamily':'ui-sans-serif, system-ui'}}}%%
+flowchart LR
+    classDef input fill:#1f2937,stroke:#9ca3af,color:#f3f4f6,stroke-dasharray:3 3
+    classDef inv   fill:#7c2d12,stroke:#fb923c,color:#ffedd5,stroke-width:1.5px
+    classDef build fill:#14532d,stroke:#86efac,color:#dcfce7,stroke-width:1.5px
+    classDef mem   fill:#3730a3,stroke:#c7d2fe,color:#e0e7ff,stroke-width:1.5px
+
+    report(["report"]):::input
+    diag["/diagnosis"]:::inv
+    exec["/execute"]:::build
+    review["/code-review"]:::build
+    push["/commit-push"]:::build
+    sol["/solutions"]:::mem
+
+    report --> diag --> exec --> review --> push --> sol
 ```
-report ─▶ /diagnosis ─▶ DIAGNOSIS.md + reproduction test
-                              │  (smart-reuses feature folder and appends
-                              │   ## Post-Release Bug Fix when the bug
-                              │   maps to an existing feature)
-                              ▼
-                         /execute ─▶ EXECUTION.md + fix + commits
-                                                │  (appends ## Fixed
-                                                │   to DIAGNOSIS.md)
-                                                ▼
-                                    /code-review ─▶ CODE-REVIEW.md
-                                                ▼
-                                    /commit-push ─▶ commits + push
-                                                ▼
-                                     /solutions ─▶ SOLUTIONS.md
-                                                (populates Root Cause,
-                                                 Prevention, regression test)
-```
+
+<sub>Side-effects: <code>/diagnosis</code> writes a reproduction test (RED). <code>/execute</code> appends <code>## Fixed</code> to DIAGNOSIS. <code>/solutions</code> populates Root Cause, Prevention, regression-test pointer. Smart-reuses an existing feature folder when the bug maps to it.</sub>
 
 ### Correction → review loop
 
+```mermaid
+%%{init: {'theme':'base','themeVariables':{'fontFamily':'ui-sans-serif, system-ui'}}}%%
+flowchart LR
+    classDef build fill:#14532d,stroke:#86efac,color:#dcfce7,stroke-width:1.5px
+    classDef art   fill:#1e293b,stroke:#94a3b8,color:#e2e8f0
+
+    cr["CODE-REVIEW.md"]:::art
+    exec["/execute (FIX)"]:::build
+    fixes["## Fixes applied"]:::art
+    rerun["/code-review re-run"]:::build
+    rr["## Re-review"]:::art
+
+    cr --> exec --> fixes --> rerun --> rr
+    rr -. still issues .-> exec
+    rr -. clean .-> done(["done"])
 ```
-  ┌─────────────────────────────────────────────────────────┐
-  │                                                         │
-  ▼                                                         │
-CODE-REVIEW.md ─▶ /execute (FIX mode) ─▶ Phase 0.5 triage  │
-                              │        (pick P0/P1/P2/P3   │
-                              │         to address vs skip)│
-                              ▼                            │
-                    EXECUTION.md + commits                 │
-                    (skipped findings                      │
-                     logged in audit table)                │
-                              │                            │
-                              ▼                            │
-            CODE-REVIEW.md gains  ## Fixes applied         │
-                    (addressed + skipped tables;           │
-                     originals untouched)                  │
-                              │                            │
-                              ▼                            │
-             /code-review ─▶ ## Re-review <DATE>           │
-                  (Verification of prior fixes table —    │
-                   claim_mismatch findings bypass          │
-                   suppression via +0.15 boost)            │
-                              │                            │
-                              └────────────────────────────┘
-                              loop until clean
-```
+
+<sub><code>/execute</code> Phase 0.5 triage picks P0 / P1 / P2 / P3 to address vs skip. Skipped findings are recorded in an audit table. On re-review, <em>claim-mismatch</em> findings bypass suppression via a +0.15 boost.</sub>
 
 ### Audit → refactor → re-audit loop
 
+```mermaid
+%%{init: {'theme':'base','themeVariables':{'fontFamily':'ui-sans-serif, system-ui'}}}%%
+flowchart LR
+    classDef input fill:#1f2937,stroke:#9ca3af,color:#f3f4f6,stroke-dasharray:3 3
+    classDef inv   fill:#7c2d12,stroke:#fb923c,color:#ffedd5,stroke-width:1.5px
+    classDef build fill:#14532d,stroke:#86efac,color:#dcfce7,stroke-width:1.5px
+    classDef art   fill:#1e293b,stroke:#94a3b8,color:#e2e8f0
+
+    stable(["stable module"]):::input
+    audit["/audit"]:::inv
+    am["AUDIT.md"]:::art
+    exec["/execute (REFACTOR)"]:::build
+    ra["## Refactors applied"]:::art
+    reaudit["/audit re-run"]:::inv
+    rra["## Re-audit"]:::art
+
+    stable --> audit --> am --> exec --> ra --> reaudit --> rra
+    rra -. surviving/new .-> exec
 ```
-  ┌──────────────────────────────────────────────────────────┐
-  │                                                          │
-  ▼                                                          │
-stable module ─▶ /audit ─▶ AUDIT.md                          │
-                   (P0/P1/P2/P3 smells from the              │
-                    3-layer vocabulary;                      │
-                    Bugs surfaced ─▶ /diagnosis)             │
-                         │                                   │
-                         ▼                                   │
-       /execute (REFACTOR mode) ─▶ Phase 0.5 triage          │
-                         │     (Bugs surfaced filtered out)  │
-                         ▼                                   │
-             characterization-tdd per slice:                 │
-             ┌─ pin GREEN baseline                           │
-             ├─ apply refactor                               │
-             ├─ verify same test still GREEN                 │
-             └─ full suite GREEN                             │
-             (mechanical refactors ─▶ Verification Mode)     │
-                         │                                   │
-                         ▼                                   │
-             EXECUTION.md + commits                          │
-             ( refactor: <smell> — <title>  subjects )       │
-                         │                                   │
-                         ▼                                   │
-             AUDIT.md gains  ## Refactors applied            │
-                         │                                   │
-                         ▼                                   │
-              /audit ─▶  ## Re-audit <DATE>  ────────────────┘
-                        (cleared, surviving, newly-surfaced)
-```
+
+<sub>Characterization-TDD per slice: pin a GREEN baseline → apply refactor → verify the baseline still GREEN → full suite GREEN. Mechanical refactors use Verification Mode. Bugs-surfaced items are routed to <code>/diagnosis</code> — never refactored.</sub>
 
 ### External review loop
 
+```mermaid
+%%{init: {'theme':'base','themeVariables':{'fontFamily':'ui-sans-serif, system-ui'}}}%%
+flowchart LR
+    classDef input fill:#1f2937,stroke:#9ca3af,color:#f3f4f6,stroke-dasharray:3 3
+    classDef build fill:#14532d,stroke:#86efac,color:#dcfce7,stroke-width:1.5px
+    classDef art   fill:#1e293b,stroke:#94a3b8,color:#e2e8f0
+
+    pr(["GitHub PR"]):::input
+    prfb["/pr-feedback"]:::build
+    pfm["PR-FEEDBACK.md"]:::art
+    exec["/execute (FIX)"]:::build
+    push["/commit-push"]:::build
+    rt["## Re-triage"]:::art
+
+    pr --> prfb --> pfm --> exec --> push --> rt
+    rt -. reviewer re-reviews .-> prfb
 ```
-GitHub PR (teammates review)
-     │
-     ▼
-/pr-feedback ─▶ mandatory branch-checkout gate
-                 (offers gh pr checkout)
-                       │
-                       ▼
-          GraphQL reviewThreads
-        + REST timeline + reviews
-                       │
-                       ▼
-          union non-dismissed · dedupe by thread_id
-                       │
-                       ▼
-          5 verdicts × 0-100 confidence
-          + drafted replies + Handoff table
-                       │
-                       ▼
-          reconcile with sibling CODE-REVIEW.md
-          (agreements +15 · tensions surface)
-                       │
-                       ▼
-          PR-FEEDBACK.md  ─▶  /execute (FIX mode)
-                       │          │
-                       │          ▼
-                       │     EXECUTION.md + commits
-                       ▼          │
-       copy-paste drafted replies │
-       to the PR (human's turn)   ▼
-                             /commit-push ─▶ push
-                                         │
-                                         ▼
-                              reviewer looks again
-                                         │
-                                         ▼
-                /pr-feedback ─▶ ## Re-triage <DATE>
-```
+
+<sub>Mandatory branch-checkout gate (offers <code>gh pr checkout</code>). GraphQL <code>reviewThreads</code> + REST timeline + reviews, unioned and deduped by <code>thread_id</code>. Reconciles with a sibling CODE-REVIEW.md — agreements <code>+15</code>, tensions surfaced. Drafted replies are copy-pasted by the human.</sub>
 
 ---
 
@@ -946,11 +945,14 @@ Every artifact is written for a future session that has none of this turn's cont
 
 <br />
 
-![](https://img.shields.io/badge/MIT-licensed-1e293b?style=flat-square&labelColor=0f172a)
-![](https://img.shields.io/badge/v0.12.0-current-22c55e?style=flat-square&labelColor=0f172a)
-![](https://img.shields.io/badge/12-skills-38bdf8?style=flat-square&labelColor=0f172a)
-![](https://img.shields.io/badge/11-sub--agents-a855f7?style=flat-square&labelColor=0f172a)
+[![Version](https://img.shields.io/badge/version-0.12.0-brightgreen?style=flat-square)](.claude-plugin/plugin.json)
+[![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
+[![Claude Code Plugin](https://img.shields.io/badge/claude%20code-plugin-orange?style=flat-square)](https://docs.claude.com/en/docs/claude-code/plugins)
+[![Skills](https://img.shields.io/badge/skills-12-purple?style=flat-square)](#the-twelve-skills)
+[![Sub-agents](https://img.shields.io/badge/sub--agents-11-teal?style=flat-square)](#the-eleven-sub-agents)
 
-<sub>See [LICENSE](LICENSE) · built for [Claude Code](https://docs.claude.com/en/docs/claude-code) · issues and pull requests welcome</sub>
+<br />
+
+<sub>Built for <a href="https://docs.claude.com/en/docs/claude-code">Claude Code</a> · <a href="https://github.com/vilarjp/eva/issues">issues</a> · <a href="https://github.com/vilarjp/eva/pulls">pull requests</a> · MIT licensed</sub>
 
 </div>
