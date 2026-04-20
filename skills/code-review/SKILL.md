@@ -228,6 +228,7 @@ Pass each reviewer:
 - Diff scope + file list + diff content.
 - Scope tier.
 - Repo root path.
+- Path to `../_shared/stack-skills.md` — every reviewer evaluates the diff against patterns registered there within its own lane (quality picks up correctness idioms, convention picks up composition patterns, performance picks up render-path + hot-path idioms, security picks up input / auth idioms). Findings citing a registered skill use the finding shape from the registry — `<skill-key>: <idiom>` in the smell column, verbatim evidence, stated cost.
 - For security/performance: the trigger pattern that brought them in.
 
 Collect the returned JSON payloads. If any reviewer's output is malformed (not valid JSON, missing required fields), note the failure in the artifact's Stage results table and proceed with the reviewers that succeeded — do not block the pipeline on a malformed return.
@@ -485,6 +486,7 @@ STOP if you catch yourself doing any of these:
 - `references/findings-schema.md` — shared JSON schema every reviewer returns. Dispatch sends reviewers to this file.
 - `references/scope-tiers.md` — detailed Lightweight / Standard / Deep rubric, including security/performance auto-trigger patterns. Load when Phase 0.5 classification is ambiguous.
 - `references/anti-patterns.md` — orchestration and reviewer failure modes. Load when tempted to skip a stage or pad findings.
+- `../_shared/stack-skills.md` — pointer registry of external stack-specific skills (`vercel-react-best-practices`, `vercel-composition-patterns`, `nodejs-backend-patterns`). Load in Phase 4 and pass the path to every dispatched Stage 2 reviewer so each lane evaluates diff changes against registered patterns (quality → correctness idioms, convention → composition patterns, performance → render-path + hot-path, security → input / auth).
 - `agents/code-review-quality-reviewer.md` *(plugin root)* — Stage 2 code-quality reviewer.
 - `agents/code-review-convention-reviewer.md` *(plugin root)* — Stage 2 convention reviewer.
 - `agents/code-review-test-reviewer.md` *(plugin root)* — Stage 2 test quality reviewer.

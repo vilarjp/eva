@@ -103,14 +103,16 @@ Announce: `audit: context loaded — <n> files, <n> submodules <if Deep>, <n> co
 
 ### Phase 2 — Smell inventory (individual findings)
 
-Walk the target through the two smell catalogues. Each candidate finding must:
+Walk the target through the smell catalogues. Each candidate finding must:
 
 1. **Cite `file:line` + a 5-30-word quote.**
-2. **Name the smell category** — one of the Fowler vocabulary entries or one of `TYPE / LINT / SWALLOW / TIMING / PATCH / SCATTER / CLONE` from `../_shared/no-workarounds.md`. Unnamed = dropped.
+2. **Name the smell category** — one of the Fowler vocabulary entries, one of `TYPE / LINT / SWALLOW / TIMING / PATCH / SCATTER / CLONE` from `../_shared/no-workarounds.md`, or a stack-skill pattern from `../_shared/stack-skills.md` (e.g. `vercel-react: stale-closure in effect`). Unnamed = dropped.
 3. **State the cost** — *"adding a currency forces edits in 11 files"*, *"every new caller re-implements the same null guard"*, *"the swallowed error hides a retry that never fires"*.
 4. **Propose a refactor shape in one sentence** — *"move `calculateTotal` to `Cart` — the four reads it does belong there"*, *"parse `response.data` through `UserSchema` at the boundary, drop the downstream null-guards"*. No code blocks.
 
-See `references/smell-playbook.md` for the full catalogue with gate questions and disambiguation.
+See `references/smell-playbook.md` for the full Fowler + `no-workarounds` catalogue with gate questions and disambiguation.
+
+**Stack-skill consultation.** When the target includes code in a registered stack (React / Next.js / Node.js backend), also consult `../_shared/stack-skills.md` and the skills it points to. Stack-skill findings use the same shape as any other — the smell column cites the skill by name so the reader can follow to the authoritative source. A stack-skill violation is not automatically P1 — calibrate severity against stated cost, like any other finding.
 
 **Suppress false positives.** If a candidate smell was deliberate (documented ADR, known trade-off, shared-kernel constraint), drop it from the inventory. Over-surfacing drowns the real findings.
 
@@ -278,5 +280,6 @@ STOP if you catch yourself:
 - `references/scope-tiers.md` — detailed Lightweight / Standard / Deep rubric with severity bands and per-tier ceilings.
 - `references/smell-playbook.md` — full Fowler + `_shared/no-workarounds` catalogue with gate questions, disambiguation, and example findings. Load in Phase 2.
 - `../_shared/no-workarounds.md` — seven workaround categories (TYPE / LINT / SWALLOW / TIMING / PATCH / SCATTER / CLONE) and the five-condition Escape Valve. Findings in this catalogue are often P0 / P1 because they mask root causes.
+- `../_shared/stack-skills.md` — pointer registry of external stack-specific skills eva defers to for idiom-level vocabulary (React / Next.js via `vercel-react-best-practices` + `vercel-composition-patterns`, Node backend via `nodejs-backend-patterns`). Load in Phase 2 when the target includes code in a registered stack; findings cite the skill by name (e.g. `vercel-react: stale-closure in effect`) instead of restating its rules.
 - `agents/code-review-quality-reviewer.md` — the Fowler vocabulary entries (Feature Envy, Primitive Obsession, Data Clumps, Shotgun Surgery, Divergent Change, etc.) are the same set used here.
 - `agents/code-review-test-reviewer.md` — the five named test anti-patterns (mock-behaviour assertion, test-only production methods, mocking without understanding, incomplete mocks, tests-as-afterthought) are the vocabulary for Phase 3 test-layer observations.

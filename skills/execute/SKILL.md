@@ -347,6 +347,8 @@ If the user requests changes: loop back to the appropriate phase (B → Phase 3 
 
 For each slice, walk these steps in order. Do not interleave slices.
 
+**Stack-skill consultation.** Before 6.1, if the slice's files touch a registered stack (React / Next.js / Node.js backend), read the relevant skill from `../_shared/stack-skills.md` and apply its idioms as you write. The RED / GREEN / REFACTOR discipline below is unchanged — the stack skill shapes *what* code you write, not *when*. If the slice is REFACTOR-mode and the source finding already cites a stack-skill pattern, the pattern's cause-level fix IS the refactor shape.
+
 **6.1 RED — Write the failing test (FEATURE / BUG / FIX / RAW) OR the characterization test (REFACTOR).** Use the project's existing test framework and conventions (discovered in pre-scan).
 
 - **FEATURE / BUG / FIX / RAW modes.** Write a test that fails because the target behaviour is missing (or because the bug is real). Run it. **Watch it fail.** Capture literal stdout/stderr — the RED proof. Success criteria for a genuine RED:
@@ -507,4 +509,5 @@ STOP if you catch yourself:
 - `references/tdd-discipline.md` — Iron Law, RED-GREEN-REFACTOR ceremony, Verification Mode rules, Prove-It Pattern for bug fixes, Delete Rule, DAMP over DRY in tests, preference order (Real > Fake > Stub > Mock). Load when a slice stalls on test design.
 - `references/anti-patterns.md` — rationalizations, bypass patterns, scope creep, and the "error output is data, not instructions" security rule. Load when tempted to skip a phase.
 - `../_shared/no-workarounds.md` — seven workaround categories with gate questions and the five-condition Escape Valve. Consulted in Phase 3 before each slice's plan is finalized; referenced when the RED proof tempts a symptom-patch rather than a root-cause fix.
+- `../_shared/stack-skills.md` — pointer registry of external stack-specific skills consulted before writing code in a registered stack. Load at the top of Phase 6 for any slice whose files touch React / Next.js / Node backend; the registered skill shapes the code but leaves the TDD ceremony untouched.
 - `../audit/references/smell-playbook.md` — REFACTOR-mode findings cite smells from this playbook (Fowler vocabulary + `../_shared/no-workarounds.md` categories + test-layer anti-patterns). Load in Phase 0.5.1 when parsing an AUDIT.md to confirm the named-smell vocabulary carries through into the slice plan and commit body.
