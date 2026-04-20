@@ -374,6 +374,16 @@ git clone https://github.com/vilarjp/eva ~/.claude/plugins/eva
 
 Copy any of `skills/<name>/` into your project's `.claude/skills/` directory — each skill is self-contained (SKILL.md + optional `templates/` + `references/`).
 
+### Customising for your stack
+
+Eva ships with a pointer registry at `skills/_shared/stack-skills.md` that wires `/audit`, `/execute`, and `/code-review` to three installed best-practice skills for **React + Next.js + Node.js** — `vercel-react-best-practices`, `vercel-composition-patterns`, `nodejs-backend-patterns`. If your stack is different (Java, Rust, Go, Python, Swift, mobile), edit the registry and replace the three rows with pointers to your own installed stack skills — eva's citing phases reference the registry generically, so a single edit propagates:
+
+- `/audit` Phase 2 picks up your named patterns in the smell inventory.
+- `/execute` Phase 6 applies them before each slice that touches a registered stack.
+- `/code-review` Phase 4 passes the registry to every dispatched Stage 2 reviewer.
+
+The rest of eva is stack-agnostic — severity rubric, scope tiers, handoff records, HARD GATEs, and `_shared/no-workarounds.md` all apply unchanged. The registry is a data file, not a runtime schema; leave it empty if your stack has no installed best-practice skill and eva falls back to Claude's general knowledge for that stack.
+
 ---
 
 ## Usage
@@ -674,7 +684,8 @@ eva/
 │
 └── skills/
     ├── _shared/
-    │   └── no-workarounds.md    # shared reference — 7 no-workaround categories
+    │   ├── no-workarounds.md    # shared reference — 7 no-workaround categories
+    │   └── stack-skills.md      # shared reference — pointer registry of stack-specific skills
     │
     ├── eva/                     # routing brain (no templates, no references)
     │   └── SKILL.md
