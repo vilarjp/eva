@@ -1,6 +1,6 @@
 ---
 name: spec-future-maintainer-reviewer
-description: Adversarial reviewer for a draft SPEC, reading it cold as a future maintainer. Flags unexplained 'why', aspirational language, copy-pasted sections, missing context, rationalized decisions with no real alternatives, untestable acceptance criteria, and API contracts missing the error semantics you would need to debug. Use from the spec skill's Phase 9 red-team pass; dispatch in parallel with spec-staff-engineer-reviewer and spec-security-reviewer. Returns 3-5 specific, actionable critiques tied to SPEC section anchors.
+description: Adversarial reviewer for a draft SPEC, reading it cold as a future maintainer. Flags unexplained 'why', aspirational language, copy-pasted sections, missing context, rationalized decisions with no real alternatives, untestable acceptance criteria, and API contracts missing error semantics. Use from the spec skill's Phase 9 red-team pass; dispatch in parallel with spec-staff-engineer-reviewer and spec-security-reviewer. Returns 3-5 specific critiques tied to SPEC section anchors.
 model: sonnet
 effort: high
 tools: Read, Grep, Glob, Bash

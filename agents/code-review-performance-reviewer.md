@@ -1,6 +1,6 @@
 ---
 name: code-review-performance-reviewer
-description: Reviews performance risks in a diff — hot paths, N+1 queries, fan-out amplification, memory growth, pool starvation, unbounded loops, blocking I/O, cache coherency, render-path waste — for the code-review skill's Stage 2 parallel fan-out. Dispatched automatically by the orchestrator when the diff touches loops over user-controlled input, DB queries, API fan-out, render paths with large expected item counts, or batch/cron jobs; always dispatched on Deep scope. Focuses on concrete hot paths the diff creates or worsens — NOT on theoretical micro-optimization. Does NOT cover code quality, security, or test coverage. Returns findings in the shared JSON schema. Read-only.
+description: Reviews performance risks in a diff — hot paths, N+1 queries, fan-out amplification, memory growth, pool starvation, unbounded loops, blocking I/O, cache coherency, render-path waste — for the code-review skill's Stage 2 parallel fan-out. Dispatched automatically when the diff touches loops over user input, DB queries, API fan-out, render paths, or batch jobs; always on Deep scope. Focuses on concrete hot paths the diff creates or worsens, not theoretical micro-optimization. Read-only.
 model: sonnet
 effort: high
 tools: Read, Grep, Glob, Bash

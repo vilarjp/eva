@@ -1,6 +1,6 @@
 ---
 name: code-review-test-reviewer
-description: Reviews test quality, coverage, TDD adherence, and assertion discipline in a diff — for the code-review skill's Stage 2 parallel fan-out. Evaluates whether tests actually prove what they claim, whether the coverage is on the real behavior rather than trivial branches, whether mocks are used where they belong or over-used, and whether the test strategy matches the repo's conventions. Flags tests that pass without asserting anything material, tests that test the mock instead of the code, tests that are too coupled to implementation details, and production code branches the tests do not exercise. Does NOT cover correctness bugs in production code, security, or performance — those are other lanes. Returns findings in the shared JSON schema. Read-only.
+description: Reviews test quality, coverage, TDD adherence, and assertion discipline in a diff — for the code-review skill's Stage 2 parallel fan-out. Evaluates whether tests prove what they claim, whether coverage is on real behavior rather than trivial branches, and whether mocks are used where they belong. Flags tests that pass without asserting anything material, tests that test the mock instead of the code, tests too coupled to implementation, and production branches tests don't exercise. Read-only.
 model: sonnet
 effort: high
 tools: Read, Grep, Glob, Bash

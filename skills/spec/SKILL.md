@@ -1,6 +1,6 @@
 ---
 name: spec
-description: Turn a feature idea or approved PRD into a rigorous, codebase-grounded technical specification. Use when the user wants to write a tech spec, design the architecture for a feature, document engineering decisions before coding, plan how to build something approved in a PRD, or invokes /spec. Produces docs/YYYY-MM-DD-slug/SPEC.md with current + proposed architecture, embedded mini-ADRs for each key decision, data model, API contracts, module boundaries, tracer-bullet phase outline, test strategy, risks, diagrams, and open questions. Auto-detects an adjacent PRD.md and builds on it when present. Scope-adaptive (Lightweight / Standard / Deep), with codebase pre-scan, adversarial red-team pass, self-review checklist, and an approval gate before writing.
+description: Turn a feature idea or approved PRD into a rigorous, codebase-grounded technical specification. Use when the user wants to write a tech spec, design the architecture for a feature, document engineering decisions before coding, plan how to build something approved in a PRD, or invokes /spec. Produces docs/YYYY-MM-DD-slug/SPEC.md with current + proposed architecture, mini-ADRs for each key decision, data model, API contracts, module boundaries, test strategy, risks, and open questions. Auto-detects an adjacent PRD.md and builds on it when present. Distinct from /prd (product framing, not engineering design).
 argument-hint: "[feature idea to design or PRD to build on]"
 ---
 

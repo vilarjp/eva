@@ -1,6 +1,6 @@
 ---
 name: prd
-description: Turn a rough feature idea or problem into a rigorous, codebase-grounded PRD document. Use when the user wants to brainstorm a new feature, write a PRD, draft requirements, explore design options before committing, or invokes /prd. Produces docs/YYYY-MM-DD-slug/PRD.md with problem framing, goals, non-goals, 2-3 options with trade-offs, recommended direction, complexity tier, user stories, an explicit not-doing list, and open questions. Scope-adaptive (Lightweight, Standard, or Deep), with codebase pre-scan, self-review checklist, and an approval gate before writing.
+description: Turn a rough feature idea or problem into a rigorous, codebase-grounded PRD document. Use when the user wants to brainstorm a new feature, write a PRD, draft requirements, or invokes /prd. Produces docs/YYYY-MM-DD-slug/PRD.md with problem framing, goals, non-goals, 2-3 options with trade-offs, recommended direction, user stories, and open questions. Distinct from /spec (technical design, not product framing).
 argument-hint: "[feature idea or problem to explore]"
 ---
 
