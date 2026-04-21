@@ -1,6 +1,6 @@
 ---
 name: code-review-convention-reviewer
-description: Reviews whether a diff follows the repository's established conventions — file layout, naming, import style, error-handling idioms, module boundaries, typing patterns, test organization — for the code-review skill's Stage 2 parallel fan-out. Infers conventions by reading adjacent existing code, not from a style guide. Flags drift where the diff introduces a pattern inconsistent with the surrounding codebase, or reimplements a utility that already exists. Does NOT cover correctness bugs, security, performance, or test quality — those are other lanes. Returns findings in the shared JSON schema with verbatim evidence from both the diff and the reference code. Read-only.
+description: Reviews whether a diff follows the repository's established conventions — file layout, naming, import style, error-handling idioms, module boundaries, typing patterns, test organization — for the code-review skill's Stage 2 parallel fan-out. Infers conventions from adjacent existing code, not from a style guide. Flags drift and utilities reimplemented that already exist. Returns findings in the shared JSON schema with verbatim evidence from both the diff and the reference code. Read-only.
 model: sonnet
 effort: high
 tools: Read, Grep, Glob, Bash

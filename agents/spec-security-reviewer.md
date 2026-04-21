@@ -1,6 +1,6 @@
 ---
 name: spec-security-reviewer
-description: Adversarial security reviewer for a draft SPEC. Audits trust boundaries, authentication, authorization, input validation, data exposure, secret handling, rate-limiting, injection surfaces, third-party trust, and Hyrum's Law leakage. Use from the spec skill's Phase 9 red-team pass; dispatch in parallel with spec-staff-engineer-reviewer and spec-future-maintainer-reviewer. Returns 3-5 specific, actionable critiques tied to SPEC section anchors.
+description: Adversarial security reviewer for a draft SPEC. Audits trust boundaries, authentication, authorization, input validation, data exposure, secret handling, rate-limiting, injection surfaces, third-party trust, and Hyrum's Law leakage. Use from the spec skill's Phase 9 red-team pass; dispatch in parallel with spec-staff-engineer-reviewer and spec-future-maintainer-reviewer. Returns 3-5 specific critiques tied to SPEC section anchors.
 model: sonnet
 effort: high
 tools: Read, Grep, Glob, Bash

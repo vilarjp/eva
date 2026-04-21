@@ -1,6 +1,6 @@
 ---
 name: code-review-security-reviewer
-description: Reviews security risks in a diff — auth, user input validation, injection surfaces, data exposure, secrets, rate limiting, crypto correctness, Hyrum's-Law leakage — for the code-review skill's Stage 2 parallel fan-out. Dispatched automatically by the orchestrator when the diff touches user-input handlers, auth, permissions, sessions, secrets, rendered output, file paths, URLs, database queries, or third-party calls; always dispatched on Deep scope. Focuses on the specific vulnerabilities the current diff enables or leaves ambiguous — NOT on generic threat modeling or policy. Does NOT cover general code quality, performance, or plan alignment. Returns findings in the shared JSON schema with verbatim code evidence. Read-only.
+description: Reviews security risks in a diff — auth, user input validation, injection surfaces, data exposure, secrets, rate limiting, crypto correctness, Hyrum's-Law leakage — for the code-review skill's Stage 2 parallel fan-out. Dispatched automatically when the diff touches user-input handlers, auth, permissions, sessions, secrets, rendered output, file paths, URLs, database queries, or third-party calls; always on Deep scope. Focuses on specific vulnerabilities the current diff enables or leaves ambiguous, not generic threat modeling. Read-only.
 model: sonnet
 effort: high
 tools: Read, Grep, Glob, Bash

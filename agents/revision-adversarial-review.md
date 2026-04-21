@@ -1,6 +1,6 @@
 ---
 name: revision-adversarial-review
-description: Rigorous (not hostile) epistemic reviewer that cold-reads a PRD.md and SPEC.md pair to surface premise flaws, unstated assumptions, decision stress points, unearned abstractions, and alternative blindness. Use when a planning skill (e.g., revision) needs an independent read unshaped by the orchestrator's narrative. Returns structured findings with verbatim evidence quotes, technique tags, suggested severity, and proposed minimal fixes. Read-only — does not edit PRD.md, SPEC.md, or any other file.
+description: Rigorous epistemic reviewer that cold-reads a PRD.md and SPEC.md pair to surface premise flaws, unstated assumptions, decision stress points, unearned abstractions, and alternative blindness. Use when a planning skill needs an independent read unshaped by the orchestrator's narrative. Returns structured findings with verbatim evidence quotes, technique tags, severity, and proposed minimal fixes. Read-only — does not edit PRD.md, SPEC.md, or any other file.
 model: sonnet
 effort: high
 tools: Read, Grep, Glob

@@ -1,6 +1,6 @@
 ---
 name: spec-staff-engineer-reviewer
-description: Adversarial reviewer for a draft SPEC. Critiques risks, failure modes under load, deploy/rollback hazards, concurrency, capacity, observability, and cross-module coupling. Use from the spec skill's Phase 9 red-team pass; dispatch in parallel with spec-security-reviewer and spec-future-maintainer-reviewer. Returns 3-5 specific, actionable critiques tied to SPEC section anchors.
+description: Adversarial reviewer for a draft SPEC. Critiques risks, failure modes under load, deploy/rollback hazards, concurrency, capacity, observability, and cross-module coupling. Use from the spec skill's Phase 9 red-team pass; dispatch in parallel with spec-security-reviewer and spec-future-maintainer-reviewer. Returns 3-5 specific critiques tied to SPEC section anchors.
 model: sonnet
 effort: high
 tools: Read, Grep, Glob, Bash
