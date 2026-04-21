@@ -1,6 +1,6 @@
 {
   "name": "eva",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "description": "Twelve composable, scope-adaptive Claude Code skills for compound engineering — plus a routing brain that picks the right one for any input. Reverse-engineer an unfamiliar file (local or URL) into a structural map, brainstorm a PRD, spec the design, cross-review the pair, diagnose bugs, audit stable code for structural debt, execute via red-green-refactor TDD (or REFACTOR mode against an audit), review the diff with a multi-reviewer pipeline, triage incoming PR review feedback into actionable verdicts, commit-push with safety gates, and capture durable learnings — each skill produces a single cold-readable artifact (TEARDOWN / PRD / SPEC / REVISION / DIAGNOSIS / AUDIT / EXECUTION / CODE-REVIEW / PR-FEEDBACK / SOLUTIONS) and is gated on explicit user approval before any write. The twelfth skill, `/eva`, is a pure router — it reads intent from a goal, URL, Jira card, GitHub PR/issue, or file path and returns an ordered pipeline of the other eleven with per-step rationale and scope; never writes artifacts of its own, never edits code. Refuses protected branches, never opens PRs, never `git add -A`, never `--force`, never `--no-verify`, never commits secrets, never posts to a PR on the author's behalf, never transitions Jira issue state.",
   "author": {
     "name": "João Vilar",

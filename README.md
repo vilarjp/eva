@@ -956,7 +956,7 @@ Every artifact is written for a future session that has none of this turn's cont
 
 <br />
 
-[![Version](https://img.shields.io/badge/version-0.13.0-brightgreen?style=flat-square)](.claude-plugin/plugin.json)
+[![Version](https://img.shields.io/badge/version-0.14.0-brightgreen?style=flat-square)](.claude-plugin/plugin.json)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
 [![Claude Code Plugin](https://img.shields.io/badge/claude%20code-plugin-orange?style=flat-square)](https://docs.claude.com/en/docs/claude-code/plugins)
 [![Skills](https://img.shields.io/badge/skills-12-purple?style=flat-square)](#the-twelve-skills)
