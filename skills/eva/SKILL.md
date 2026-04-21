@@ -158,7 +158,9 @@ Signals:
 - File count from Phase 1 reading.
 - Issue labels (`architecture`, `security`, `migration`, `breaking-change` → Deep).
 - Scope keywords in free-text (*"migration"*, *"schema change"*, *"refactor everything"*, *"cross-service"* → Deep).
-- Default to Standard when signals are mixed.
+- **Default to Lightweight** when signals are small or mixed — a one-file
+  change, a one-sentence idea, a single-module bug. Standard is earned by
+  multi-module scope or a real decision; Deep by the signals above.
 
 This tier sets the **expectation** for the work. Individual skills may run at their own scope — but the recommendation sets the starting point.
 

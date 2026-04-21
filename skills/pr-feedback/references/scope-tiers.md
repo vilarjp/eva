@@ -15,7 +15,7 @@ Classify the triage ceremony by the density and contentiousness of reviewer feed
 
 | Tier | All of | Ceremony |
 |------|--------|----------|
-| **Lightweight** | `total_comments <= 5` AND `reviewer_count == 1` AND `review_decision != CHANGES_REQUESTED` AND `diff_loc < 100` AND NOT `sensitive_surface`. | Fast path. Spec cross-reference optional if no plan folder exists. Reconciliation with CODE-REVIEW.md: fingerprint-match only; skip tension surfacing unless ≥1 contradiction fires. Reply-draft tone: 1-2 sentences. Residual-risks section may be "(none)". |
+| **Lightweight** | `total_comments <= 5` AND `reviewer_count == 1` AND `review_decision != CHANGES_REQUESTED` AND `diff_loc < 100` AND NOT `sensitive_surface`. | Fast path. PR-FEEDBACK.md under ~90 filled lines. Optional sections (reconciliation, suppressed, resolved, residual risks, dismissed) cut entirely unless non-empty. Reply-draft tone: 1-2 sentences. See `_shared/artifact-compactness.md`. |
 | **Standard** | `total_comments 6-20` OR `reviewer_count >= 2` OR `review_decision == CHANGES_REQUESTED` OR `diff_loc 100-500`. | Full pipeline. Spec cross-reference required if a plan folder exists. CODE-REVIEW.md reconciliation full (agreement + tension). Reply drafts full-voice (3-5 sentences when citing spec). |
 | **Deep** | `total_comments > 20` OR `multi_reviewer_disagreement` OR `sensitive_surface` OR `diff_loc > 500`. | Full pipeline + mandatory Residual Risks section with every ambiguous anchor listed. Reconciliation must quote CODE-REVIEW.md entries by `F-N`. Reply drafts include SHA-pinned `file:line` permalinks. Cross-reviewer conflict gets its own Reconciliation subsection. |
 

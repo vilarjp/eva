@@ -247,6 +247,7 @@ Before writing the file, emit this checklist with `✓` or `✗` on each line:
 - [ ] Codebase claims are verified by reading files; unverified items labeled `(unverified)`
 - [ ] No placeholder text, no `[TBD]`, no `TODO`
 - [ ] For Deep scope, a diagram is included
+- [ ] **Compactness check** — every empty / trivial / off-scope section is cut (not kept with a placeholder). Remaining sections pass the caps in `../_shared/artifact-compactness.md`. Cutting more would remove information, not just words.
 
 If any check fails → STOP, fix, re-emit. Do not proceed with any `✗` unresolved.
 

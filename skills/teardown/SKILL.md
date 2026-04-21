@@ -206,6 +206,7 @@ Before writing the file, emit this checklist with `✓` or `✗` on each line:
 - [ ] No fabricated claims — every function / variable / behavior assertion traces back to a verified read
 - [ ] No placeholder text, no `[TBD]`, no `TODO`
 - [ ] No modification of the target file, the surrounding source tree, or any file outside `docs/<DATE>-<slug>/`
+- [ ] **Compactness check** — every empty / trivial / off-scope section is cut (not kept with a placeholder). Remaining sections pass the caps in `../_shared/artifact-compactness.md`. Cutting more would remove information, not just words.
 
 If any check fails → STOP, fix, re-emit. Do not proceed with any `✗` unresolved.
 

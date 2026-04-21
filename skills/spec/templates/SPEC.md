@@ -13,173 +13,98 @@ author: "{{author}}"
 
 ## Context
 
-{{One paragraph. If a PRD exists, cite it here and summarize its recommended direction in one sentence. If standalone, state the problem and the user / system impact in technical terms.}}
+{{One paragraph. If a PRD exists, cite it and summarise its recommended
+direction in one sentence. Otherwise state the problem + technical impact.}}
 
-## Goals (technical)
+## Goals & Non-Goals
 
-1. {{Verifiable goal — behavior you can write an acceptance test for}}
-2. {{Verifiable goal}}
-3. {{Verifiable goal}}
+- **Goal** — {{behaviour you can write an acceptance test for}}
+- **Goal** — {{behaviour you can write an acceptance test for}}
+- **Non-goal** — {{real exclusion a reader might reasonably expect}}
 
-## Non-Goals (technical)
+## Constraints & Assumptions
 
-1. {{Real exclusion — something a reader might reasonably expect that is NOT covered}}
-2. {{Real exclusion}}
+{{Stack, runtime, compat, infra, timeline in one line. Assumptions as
+`claim — verified by <path>: YES/NO`. Unverified ones move to Open Questions.}}
 
-## Constraints
+## Architecture
 
-{{Tech stack, language / runtime, deployment target, backwards-compatibility requirements, infra, regulatory, timeline.}}
+**Now:** {{one paragraph — what this SPEC touches today, grounded in the
+pre-scan.}}
 
-## Assumptions
+**Proposed:** {{one paragraph — the shape after this lands. Name modules by
+responsibility, not implementation.}}
 
-1. {{Assumption}} — verified by reading {{path}}: {{YES | NO}}
-2. {{Assumption}} — verified: {{YES | NO}}
-3. {{Assumption}} — verified: {{YES | NO}}
+| Module / file                  | Role                                      | State     |
+|--------------------------------|-------------------------------------------|-----------|
+| `{{path}}`                     | {{one-line responsibility}}               | existing  |
+| `{{path}}`                     | {{one-line responsibility}}               | modified  |
+| `{{path}}`                     | {{one-line responsibility}}               | new       |
 
-## Current Architecture
+## Key decisions
 
-{{One paragraph describing the parts of the system this SPEC affects today, grounded in files read during the pre-scan.}}
+| ID  | Decision                             | Alternatives considered              | Consequence                            |
+|-----|--------------------------------------|--------------------------------------|----------------------------------------|
+| D-1 | {{one-sentence decision}}            | {{alt}} — {{reason rejected}}        | {{what becomes easier / harder}}       |
+| D-2 | {{one-sentence decision}}            | {{alt}} — {{reason rejected}}        | {{what becomes easier / harder}}       |
 
-- **{{Module / file}}** — {{one-line responsibility as it exists now}}
-- **{{Module / file}}** — {{one-line responsibility}}
-- **{{Module / file}}** — {{one-line responsibility}}
+Every real decision gets a row. Every row names at least one genuine
+alternative. No padding.
 
-## Proposed Architecture
+## Data model
 
-{{One paragraph describing the system after this work lands. Name modules by their responsibilities, not their implementations.}}
-
-- **{{Module / file}}** — {{one-line responsibility in the proposed state}}
-- **{{Module / file}}** — {{one-line responsibility}}
-- **{{Module / file}}** *(new)* — {{one-line responsibility}}
-
-## Key Decisions
-
-### D-1: {{Short decision title}}
-
-- **Context:** {{What pressure forced this decision — constraint, goal, or trade-off}}
-- **Decision:** {{One or two sentences, definitive}}
-- **Alternatives Considered:**
-  - *{{Alternative A}}* — {{one-line reason for rejection}}
-  - *{{Alternative B}}* — {{one-line reason for rejection}}
-- **Consequences:** {{What becomes easier · what becomes harder · rollback cost}}
-
-### D-2: {{Short decision title}}
-
-- **Context:** {{...}}
-- **Decision:** {{...}}
-- **Alternatives Considered:**
-  - *{{Alternative}}* — {{reason}}
-- **Consequences:** {{...}}
-
-<!-- Add D-3, D-4 as needed. Delete unused entries. One mini-ADR per real decision only. -->
-
-## Data Model
-
-{{Entities, fields, types, relationships. Call out invariants (uniqueness, foreign keys, cascade rules). For schema changes, state whether they are additive, require a migration, or require a rollout sequence.}}
-
-```
-{{inline schema sketch, TypeScript interface, SQL DDL, Protobuf, or whatever matches the stack}}
-```
-
-**Invariants:**
+{{One paragraph naming entities + relationships. Schema trivia lives in the
+code — call out only the invariants that matter:}}
 
 - {{e.g. `(user_id, task_id)` unique}}
-- {{e.g. deleting a `User` cascades to their `Session`s}}
+- {{e.g. status transitions are one-way except `submitted → cancelled`}}
 
 **Migration shape:** {{additive / requires migration — describe briefly / N/A}}
 
-## API Contracts / Interfaces
+## API contracts
 
-### {{Endpoint or function name}}
+| Endpoint / function     | Input (semantic)     | Output (semantic)     | Errors / idempotency / compat |
+|-------------------------|----------------------|-----------------------|-------------------------------|
+| `{{name}}`              | {{fields}}           | {{shape}}             | {{key error modes, retry, additive/breaking}} |
+| `{{name}}`              | {{fields}}           | {{shape}}             | {{...}}                       |
 
-- **Input:** {{required / optional fields with types}}
-- **Output (success):** {{shape}}
-- **Errors:** {{status codes and error shape — consistent with the rest of the codebase}}
-- **Idempotency / retry:** {{safe to retry? any conditions?}}
-- **Backwards-compat:** {{additive / breaking — with reason}}
+## Phases (tracer-bullets)
 
-### {{Another endpoint or function}}
+| # | Capability             | Delivers (observable behaviour)                  | Acceptance criteria (≤ 3)                           |
+|---|------------------------|--------------------------------------------------|------------------------------------------------------|
+| 1 | {{name}}               | {{what the user / system can now do}}            | {{criterion}}; {{criterion}}                         |
+| 2 | {{name}}               | {{...}}                                          | {{...}}                                              |
 
-- **Input:** {{...}}
-- **Output:** {{...}}
-- **Errors:** {{...}}
-- **Idempotency / retry:** {{...}}
-- **Backwards-compat:** {{...}}
+Capabilities, not file names. 1-4 phases total.
 
-## Module Boundaries
+## Test strategy
 
-**Created:**
+- **Unit:** {{risky logic, invariants}}
+- **Integration:** {{boundaries — DB, external API, component↔component}}
+- **Prior art:** {{1-2 existing test files that illustrate the pattern}}
 
-- `{{path/to/new-module}}` — {{responsibility}}
+## Risks
 
-**Modified:**
+| # | Risk                                 | Impact     | Mitigation                              |
+|---|--------------------------------------|------------|-----------------------------------------|
+| R-1 | {{risk}}                           | {{L/M/H}}  | {{mitigation}}                          |
 
-- `{{path/to/existing-module}}` — {{what changes in its responsibility}}
+## Not-doing
 
-**Absorbed / Removed:**
+- {{omitted scope item}} — {{reason}}
+- {{omitted scope item}} — {{reason}}
 
-- `{{path}}` — {{why it is no longer needed or where it moved}}
+## Open questions
 
-## Tracer-bullet Phases
+- [ ] {{question}} — `now` *(blocks SPEC)* or `during-build`
 
-### Phase 1 — {{Capability name}}
+<!--
+Optional sections — include ONLY when they add signal:
+- Diagram (mermaid) — mandatory on Deep, offered on Standard when structure is
+  spatial or flow is non-linear
+- Appendix — Grounding Summary — 3-10 bullets from the pre-scan
+- Appendix — Adversarial Red-team — one line per role, only if material
 
-- **Delivers:** {{one paragraph of observable behavior delivered by this slice}}
-- **Acceptance criteria:**
-  - {{Behavior-focused criterion}}
-  - {{Behavior-focused criterion}}
-  - {{Behavior-focused criterion}}
-- **Depends on:** {{none | previous phase}}
-
-### Phase 2 — {{Capability name}}
-
-- **Delivers:** {{...}}
-- **Acceptance criteria:**
-  - {{...}}
-- **Depends on:** {{Phase 1}}
-
-<!-- 1-4 phases total. No file names, no function names. -->
-
-## Test Strategy
-
-- **Unit tests:** {{what to cover at the unit level — risky logic, branches, invariants}}
-- **Integration tests:** {{what boundaries to cover — DB, external API, component↔component}}
-- **End-to-end:** {{if any — which user-observable flows}}
-- **Prior art:** {{cite 1-2 existing test files in the codebase that illustrate the pattern}}
-- **Coverage focus:** {{any risky paths that need extra attention — concurrency, migrations, third-party failure modes}}
-
-## Risks & Mitigations
-
-| # | Risk | Impact | Mitigation |
-|---|------|--------|------------|
-| R-1 | {{Risk}} | {{LOW / MED / HIGH}} | {{Mitigation}} |
-| R-2 | {{Risk}} | {{LOW / MED / HIGH}} | {{Mitigation}} |
-| R-3 | {{Risk}} | {{LOW / MED / HIGH}} | {{Mitigation}} |
-
-## Diagram *(optional — include when topic has structural or flow complexity; mandatory for Deep)*
-
-```mermaid
-{{Mermaid diagram: component, sequence, state, or flowchart that clarifies the architecture}}
-```
-
-## Not-Doing
-
-- {{Technical scope item omitted}} — {{reason}}
-- {{Technical scope item omitted}} — {{reason}}
-- {{Technical scope item omitted}} — {{reason}}
-
-## Open Questions
-
-- [ ] {{Question}} — `now` *(blocks SPEC finalization)* or `during-build` *(acceptable to defer)*
-- [ ] {{Question}} — `now | during-build`
-- [ ] {{Question}} — `now | during-build`
-
-## Appendix — Grounding Summary *(optional)*
-
-{{3-10 bullets summarizing the codebase pre-scan: relevant files read, conventions observed, prior art cited. Include when it aids future readers.}}
-
-## Appendix — Adversarial Red-team Pass *(optional — include when issues raised were material)*
-
-- **Staff engineer:** {{one-line critique}} → {{Addressed in <section> | Open Question | N/A}}
-- **Security reviewer:** {{one-line critique}} → {{Addressed in <section> | Open Question | N/A}}
-- **Future maintainer:** {{one-line critique}} → {{Addressed in <section> | Open Question | N/A}}
+Cut any section above if empty. See _shared/artifact-compactness.md and
+spec/references/anti-bloat.md for the rewrite patterns.
+-->

@@ -17,236 +17,131 @@ commits: {{integer}}
 
 ## Summary
 
-**What shipped:** {{one-paragraph plain-language account of what the code now does (or what stops breaking)}}
+**Shipped:** {{one paragraph — what the code now does (or what stops breaking).}}
 
-**Source of truth:** {{`docs/YYYY-MM-DD-<slug>/SPEC.md` at phase N | `docs/YYYY-MM-DD-<slug>/DIAGNOSIS.md` | `docs/YYYY-MM-DD-<slug>/CODE-REVIEW.md` | `docs/YYYY-MM-DD-<slug>/AUDIT.md` | raw prompt}}
+**Source of truth:** `{{path}}` | **Integration gate:** {{GREEN | GREEN with carve-out}}
 
-**Integration gate:** {{GREEN (all passed) | GREEN with carve-out (see below)}}
+## Findings triage
 
-## Micro-spec (RAW mode only)
+_Include only in FIX (source=CODE-REVIEW.md) and REFACTOR (source=AUDIT.md) modes. Otherwise cut._
 
-_Include this section ONLY when `mode: RAW`. Otherwise delete._
+**Addressed:**
 
-- **Goal:** {{one sentence}}
-- **Acceptance criteria:**
-  - {{criterion 1}}
-  - {{criterion 2}}
-  - {{criterion 3}}
-- **Modules likely touched:** {{short file list}}
-- **Risks identified up front:** {{honest, short}}
+| ID  | Sev | Title / smell         | File:line     | Slice | Commit      | Test                  |
+|-----|-----|-----------------------|---------------|-------|-------------|-----------------------|
+| F-1 | P0  | {{title}} ({{smell}}) | `{{path:line}}` | S1    | `{{SHA}}`   | `{{test:line}}`       |
 
-## Findings Addressed (FIX mode only)
+**Skipped (open — will resurface in next `/code-review` or `/audit`):**
 
-_Include this section ONLY when `mode: FIX`. Otherwise delete._
+| ID  | Sev | Title / smell | Reason                             |
+|-----|-----|---------------|------------------------------------|
+| F-4 | P2  | {{title}}     | {{default "deferred at triage"}}  |
 
-Selected from `{{path/to/CODE-REVIEW.md}}` at Phase 0.5 triage. Each finding maps to the slice that resolved it.
+**Bugs routed to `/diagnosis`** _(REFACTOR only — audit's bugs surfaced are NOT refactored):_
 
-| Finding | Severity | Title | File:line | Slice | Commit | Test |
-|---------|----------|-------|-----------|-------|--------|------|
-| F-1 | P0 | {{title}} | {{file:line}} | S1 | `{{SHA}}` | {{test/path.ts:line}} |
-| F-2 | P1 | {{title}} | {{file:line}} | S2 | `{{SHA}}` | {{test/path.ts:line}} |
-
-## Findings Skipped (FIX mode only)
-
-_Include this section ONLY when `mode: FIX`. Otherwise delete._
-
-Findings surfaced by code review and intentionally NOT addressed in this execution. These remain open issues — they will reappear in the next `/code-review` run unless explicitly addressed later.
-
-| Finding | Severity | Title | Reason |
-|---------|----------|-------|--------|
-| F-4 | P2 | {{title}} | {{user-supplied reason — default "deferred by user at triage"}} |
-| F-6 | P3 | {{title}} | {{reason}} |
-
-_If every shown finding was selected, write `None.`_
-
-## Findings Addressed (REFACTOR mode only)
-
-_Include this section ONLY when `mode: REFACTOR`. Otherwise delete._
-
-Selected from `{{path/to/AUDIT.md}}` at Phase 0.5 triage. Each finding maps to the slice that resolved it. Behaviour-preservation is the contract — the `Test` column cites the characterization test that stayed GREEN through the refactor, or `verification` for mechanical slices.
-
-| Finding | Severity | Smell | Title | File:line | Slice | Commit | Test |
-|---------|----------|-------|-------|-----------|-------|--------|------|
-| F-1 | P1 | {{Feature Envy | Shotgun Surgery | SCATTER | ...}} | {{title}} | {{file:line}} | S1 | `{{SHA}}` | {{test/path.ts:line | verification}} |
-| F-2 | P2 | {{smell}} | {{title}} | {{file:line}} | S2 | `{{SHA}}` | {{test/path.ts:line}} |
-
-## Findings Skipped (REFACTOR mode only)
-
-_Include this section ONLY when `mode: REFACTOR`. Otherwise delete._
-
-Findings surfaced by audit and intentionally NOT addressed in this execution. These remain open debt items — they will resurface in the next `/audit` re-run under `## Re-audit <DATE>` unless addressed later.
-
-| Finding | Severity | Smell | Title | Reason |
-|---------|----------|-------|-------|--------|
-| F-4 | P2 | {{smell}} | {{title}} | {{user-supplied reason — default "deferred by user at triage"}} |
-| F-6 | P3 | {{smell}} | {{title}} | {{reason}} |
-
-_If every shown finding was selected, write `None.`_
-
-## Bugs surfaced routed to /diagnosis (REFACTOR mode only)
-
-_Include this section ONLY when `mode: REFACTOR` AND the AUDIT.md had a `## Bugs surfaced` section. Otherwise delete._
-
-Real current bugs flagged by the audit were NOT processed by this REFACTOR execution — they require `/diagnosis`, not a refactor. Listed here so the user can chase them next.
-
-| Audit ID | Shape | File:line | Recommended |
-|----------|-------|-----------|-------------|
-| B-1 | {{crash | data loss | silent failure | security hole}} | {{file:line}} | run `/diagnosis` |
+| Audit ID | Shape | File:line |
+|----------|-------|-----------|
+| B-1 | {{crash / data loss / silent / security}} | `{{path:line}}` |
 
 ## Slices
 
-Vertical tracer-bullet slices executed in order. One row per slice, committed independently. `Mode` values: `full-tdd` (RED-first behaviour), `characterization-tdd` (REFACTOR — GREEN baseline pinned first, preserved after), `verification` (non-behaviour or mechanical REFACTOR).
+`full-tdd` = RED-first behaviour. `characterization-tdd` = REFACTOR with GREEN
+baseline pinned before change. `verification` = non-behaviour / mechanical.
 
-| # | Intent | Mode | Test file | Commit SHA | Result |
-|---|--------|------|-----------|------------|--------|
-| 1 | {{slice 1 capability or fix or refactor}} | {{full-tdd | characterization-tdd | verification}} | {{path/to/test-file}} | {{7-char SHA}} | {{GREEN}} |
-| 2 | {{slice 2}} | {{full-tdd | characterization-tdd | verification}} | {{path}} | {{SHA}} | {{GREEN}} |
+| # | Intent                                       | Mode                   | Test                 | Commit    | Acceptance / Finding |
+|---|----------------------------------------------|------------------------|----------------------|-----------|----------------------|
+| 1 | {{capability / fix / refactor}}              | full-tdd               | `{{test:line}}`      | `{{SHA}}` | {{SPEC P1 c1 / DIAGNOSIS root / F-N}} |
+| 2 | {{...}}                                      | characterization-tdd   | `{{test:line}}`      | `{{SHA}}` | {{F-3 (P1, Shotgun Surgery)}} |
 
-### Slice 1 — {{intent}}
+### Slice proofs
 
-**Mode:** {{full-tdd | characterization-tdd | verification}}
+_One block per slice. RED proof mandatory on `full-tdd`; characterization baseline
+mandatory on `characterization-tdd`; build+test output mandatory on `verification`._
 
-**Intent:** {{what became possible / what stopped breaking / what smell was resolved}}
+**Slice 1 — {{intent}}** — mode: {{full-tdd | characterization-tdd | verification}}
 
-**RED proof (full-tdd mode only):**
 ```
-$ {{exact test command}}
-{{literal failing output with assertion details}}
-```
-
-**Characterization baseline (characterization-tdd mode only — REFACTOR):**
-```
-$ {{exact test command}}
-{{literal PASSING output BEFORE the refactor — this is the behavioural baseline}}
+$ {{RED or baseline command}}
+{{literal output}}
+$ {{GREEN command}}
+{{literal passing output}}
 ```
 
-**GREEN proof:**
+**Files:** {{explicit comma-separated list — never "git add -A"}}.
+**Commit:** `{{SHA}}` — `{{conventional subject}}`.
+
+## Integration gate
+
+All fresh runs, no paraphrasing. Exactly one code block each, ≤ 15 lines.
+
 ```
-$ {{exact test command}}
-{{literal passing output — for characterization-tdd, same assertions still pass after the refactor}}
-```
-
-**Verification Mode output (verification mode only):**
-```
-$ {{build command — e.g. pnpm build}}
-{{literal successful output}}
-$ {{test command}}
-{{literal passing output confirming no regressions}}
-```
-
-**Files touched:** {{comma-separated, explicit — not "git add -A"}}
-
-**Commit:** `{{7-char SHA}}` — `{{conventional commit subject}}`
-
-**Acceptance criteria satisfied (FEATURE / BUG / FIX / RAW):** {{cite SPEC phase N criteria, DIAGNOSIS root cause, or CODE-REVIEW F-N}}
-
-**Finding resolved (REFACTOR only):** {{F-N, severity, smell — e.g. F-3 (P1, Shotgun Surgery)}}
-
-_Repeat the above block per slice._
-
-## Integration Gate
-
-Ran after the final slice. All captured commands are fresh runs, not paraphrased.
-
-**Full test suite:**
-```
-$ {{exact command}}
-{{literal output — counts line plus summary}}
-```
-**Result:** `{{N passed / M failed / K skipped}}` using `{{runner}}`
-
-**Lint:**
-```
-$ {{exact command}}
+$ {{full test suite command}}
+{{literal output — counts + summary}}
+$ {{lint command}}
+{{literal output}}
+$ {{type-check command}}
 {{literal output}}
 ```
-**Result:** {{OK | errors — listed}}
 
-**Type-check:**
-```
-$ {{exact command}}
-{{literal output}}
-```
-**Result:** {{OK | errors — listed}}
+**Result:** suite `{{N pass / M fail / K skip}}`; lint `{{OK / errors}}`; types `{{OK / errors}}`.
+**Skipped tests:** {{"none" or short list with legitimate reason per skip}}.
+**Carve-outs:** {{"none" or list with quoted user approval}}.
 
-**Skipped tests audit:** {{"none" OR a short list of each skip with its legitimate reason — pre-existing skip, platform-gated, deferred by user approval}}
-
-**Regression red-green proof (BUG mode and FIX mode, when practical):** {{"captured below" OR "not applicable — <reason>"}}
+**Regression proof (BUG / FIX mode):**
 
 ```
-$ {{revert fix → re-run repro test → verify RED}}
-{{literal RED output}}
-$ {{restore fix → re-run repro test → verify GREEN}}
-{{literal GREEN output}}
+$ {{revert → repro → RED}}
+{{literal RED}}
+$ {{restore → repro → GREEN}}
+{{literal GREEN}}
 ```
 
-**Behaviour-preservation proof (REFACTOR mode):** {{"captured below — full suite green before Slice 1 and after the last slice" OR "not applicable — RAW"}}
+**Behaviour-preservation (REFACTOR):**
 
 ```
-$ {{full-suite command before Slice 1}}
-{{literal GREEN output — baseline}}
-$ {{full-suite command after the last slice}}
-{{literal GREEN output — behaviour preserved}}
+$ {{full suite before Slice 1}}
+{{literal GREEN — baseline}}
+$ {{full suite after last slice}}
+{{literal GREEN — preserved}}
 ```
 
-**Carve-outs (if any):** {{list any failure or skip that was explicitly accepted by the user with their approval quoted; otherwise write "none"}}
+## Acceptance criteria trace
 
-## Acceptance Criteria Trace
+| Criterion (source)                       | Slice | Test              | Status |
+|------------------------------------------|-------|-------------------|--------|
+| {{SPEC P1 c1 / DIAGNOSIS root / F-N}}    | S1    | `{{test:line}}`   | GREEN  |
 
-Map every source-of-truth requirement to the slice and test that satisfies it.
+## Follow-ups & concerns
 
-| Criterion (source) | Slice | Test | Status |
-|--------------------|-------|------|--------|
-| {{SPEC Phase 1 criterion 1 quote | DIAGNOSIS root cause | CODE-REVIEW F-N | AUDIT F-N}} | {{S1}} | {{test/path.ts:line}} | {{GREEN}} |
-| {{criterion 2}} | {{S1}} | {{test/path.ts:line}} | {{GREEN}} |
-
-## NOTICED BUT NOT TOUCHING
-
-Out-of-scope improvements surfaced during execution and NOT acted on. Each entry is an invitation for a future task, not a hidden change.
-
-- {{observation — file / location}} — out of scope because {{reason}}
-- {{observation}} — out of scope because {{reason}}
-
-_If nothing was noticed, write `None.`_
-
-## Follow-ups
-
-Concrete TODOs worth tracking after this lands. These are NOT part of the current change.
-
-- {{follow-up 1 — enough context to pick up cold}}
-- {{follow-up 2}}
-
-_If nothing is pending, write `None.`_
-
-## Concerns
-
-Risks or low-confidence areas the reviewer should watch.
-
-- {{risk — e.g. touches error path rarely exercised in production}}
-- {{low-confidence area — e.g. happy-path test only; edge cases deferred to SPEC Phase 2}}
-- {{post-deploy watch — e.g. monitor error rate on endpoint X}}
-
-_If none, write `None.`_
+- **Noticed but not touching:** {{out-of-scope observation — why deferred}} _(invitation, not hidden change)_
+- **Follow-up:** {{concrete TODO worth tracking after this lands}}
+- **Risk / watch:** {{what could regress; what to monitor post-deploy}}
 
 ## Commits
 
-Chronological list of commits created by this execution. None were pushed.
-
 | # | SHA | Subject |
 |---|-----|---------|
-| 1 | `{{7-char SHA}}` | {{conventional commit subject}} |
-| 2 | `{{7-char SHA}}` | {{subject}} |
+| 1 | `{{SHA}}` | {{conventional subject}} |
 
-## Relationship to Source Artifact
+## Relationship to source artifact
 
-_Include the appropriate subsection; delete the others._
+Pick one; delete the rest.
 
-**FEATURE mode:** Implemented SPEC at `{{path/to/SPEC.md}}`. Appended `## Implemented {{DATE}}` back-pointer to that file.
+- **FEATURE:** Implemented SPEC at `{{path}}`. Appended `## Implemented {{DATE}}`.
+- **BUG:** Applied fix for DIAGNOSIS at `{{path}}`. Appended `## Fixed {{DATE}}`.
+- **FIX:** Addressed findings in `{{path}}`. Appended `## Fixes applied {{DATE}}` with the addressed/skipped breakdown + link to this file. Next: re-run `/code-review` for `## Re-review`.
+- **REFACTOR:** Applied refactors from `{{path}}`. Appended `## Refactors applied {{DATE}}` with the addressed/skipped breakdown (smell per finding) + link to this file. Bugs surfaced route to `/diagnosis`. Next: re-run `/audit` for `## Re-audit`.
+- **RAW:** No upstream artifact. Standalone.
 
-**BUG mode:** Applied fix for DIAGNOSIS at `{{path/to/DIAGNOSIS.md}}`. Appended `## Fixed {{DATE}}` back-pointer to that file.
+<!--
+Optional sections — include ONLY when non-empty:
 
-**FIX mode:** Addressed selected findings in `{{path/to/CODE-REVIEW.md}}`. Appended `## Fixes applied {{DATE}}` back-pointer to that file with the addressed-vs-skipped breakdown and a link to this EXECUTION.md. Next step for the human: re-run `/code-review` to append a `## Re-review {{NEXT_DATE}}` section confirming the delta.
+### Micro-spec (RAW mode only)
 
-**REFACTOR mode:** Applied selected refactors from `{{path/to/AUDIT.md}}`. Appended `## Refactors applied {{DATE}}` back-pointer to that file with the addressed-vs-skipped breakdown (including the named smell per finding) and a link to this EXECUTION.md. Bugs surfaced by the audit (if any) route to `/diagnosis`, not here. Next step for the human: re-run `/audit` to append a `## Re-audit {{NEXT_DATE}}` section confirming prior findings cleared.
+- **Goal:** {{one sentence}}
+- **Acceptance:** {{criterion}}; {{criterion}}; {{criterion}}
+- **Modules likely touched:** {{file list}}
+- **Risks up front:** {{honest, short}}
 
-**RAW mode:** No upstream artifact. This EXECUTION.md is standalone.
+Cut any section above if empty. See _shared/artifact-compactness.md.
+-->

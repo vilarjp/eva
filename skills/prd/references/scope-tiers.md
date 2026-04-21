@@ -17,7 +17,10 @@ Match ceremony to the real size and ambiguity of the work. A 20-minute PRD for a
 - Phase 7 (visual): skip unless the user explicitly asks.
 - Sections in PRD.md: keep everything compact. User Stories can be 1-3 items. Not-Doing still required.
 
-**Exit signal:** a 1-page PRD in under 5 user turns.
+**Exit signal:** a PRD under ~55 filled lines in under 5 user turns. No
+diagram, no appendix, optional sections cut entirely (not printed empty).
+The trimmed `templates/PRD.md` *is* the Lightweight shape — follow it
+verbatim, don't add sections.
 
 ## Standard
 
@@ -56,9 +59,14 @@ Match ceremony to the real size and ambiguity of the work. A 20-minute PRD for a
 
 ## When in doubt
 
-- If you are unsure between Lightweight and Standard → Standard. The overhead is small.
-- If you are unsure between Standard and Deep → ask one disambiguating question about scope before committing.
-- Never classify as Lightweight to avoid doing the work. If the scope is genuinely Lightweight, the output will naturally be short.
+- **Default to Lightweight** when the upstream signal is small — a one-sentence
+  idea, a one-module change, an already-obvious pattern. Lightweight is the
+  real floor; Standard is earned by multiple modules or a real decision.
+- Between Standard and Deep → ask one disambiguating question about blast
+  radius (public API, schema, migration, cross-quarter constraint) before
+  committing.
+- Never classify as Standard to look thorough. A short PRD for a short problem
+  is the right artifact — see `_shared/artifact-compactness.md`.
 
 ## Re-classification mid-process
 

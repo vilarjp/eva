@@ -232,6 +232,7 @@ Before proposing the gate, emit this checklist with `✓` or `✗` on each line.
 - [ ] No synthetic padding — empty sections say "intentionally empty" with a reason
 - [ ] No placeholder text, no `[TBD]`, no `TODO`
 - [ ] If appending to an existing SOLUTIONS.md, the prior content is preserved and the new section is dated
+- [ ] **Compactness check** — every empty / trivial / off-scope section is cut (not kept with a placeholder). Remaining sections pass the caps in `../_shared/artifact-compactness.md`. Cutting more would remove information, not just words.
 
 If any check fails → STOP, fix, re-emit. Do not proceed with any `✗` unresolved.
 

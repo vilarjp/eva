@@ -36,6 +36,11 @@ Does the cause involve concurrency, distributed systems, races,
 - "It looks trivial" is not the same as "it is trivial." If you read the code and find a surprise, promote to Standard.
 - Do not skip the reproduction test just because the fix is a one-liner. Every regression is a good regression test.
 
+**Exit signal:** a DIAGNOSIS.md under ~70 filled lines. No diagram, no
+pattern-analysis sub-section unless working examples were actually compared,
+no architectural-concern section. Follow the trimmed `templates/DIAGNOSIS.md`
+verbatim — see `_shared/artifact-compactness.md`.
+
 ## Tier: Standard
 
 **Signals:**

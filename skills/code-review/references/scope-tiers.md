@@ -44,6 +44,11 @@ If the diff has a corresponding plan document (PRD/SPEC/DIAGNOSIS), the plan's c
 - A one-line fix in a payment path is NOT Lightweight — promote to Deep regardless of LOC.
 - README or docs-only diffs are valid Lightweight; don't inflate ceremony because the diff is "in the codebase".
 
+**Exit signal:** a CODE-REVIEW.md under ~90 filled lines. Suppressed /
+pre-existing / diff inventory sections cut unless non-empty; findings as
+tables, one row each. Follow the trimmed `templates/CODE-REVIEW.md`
+verbatim — see `_shared/artifact-compactness.md`.
+
 ---
 
 ## Tier: Standard

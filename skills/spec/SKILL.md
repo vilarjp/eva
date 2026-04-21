@@ -286,6 +286,7 @@ Before writing, emit this checklist with `✓` or `✗` on each line.
 - [ ] Not-Doing list is non-empty and names real trade-offs
 - [ ] No placeholder text or `[TBD]` markers
 - [ ] Complexity tier matches scope classification
+- [ ] **Compactness check** — every empty / trivial / off-scope section is cut (not kept with a placeholder). Remaining sections pass the caps in `_shared/artifact-compactness.md`. Cutting more would remove information, not just words.
 
 If any check fails → STOP, fix, re-emit. Do not proceed with any `✗` unresolved.
 

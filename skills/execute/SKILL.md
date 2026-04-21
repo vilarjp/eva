@@ -452,6 +452,13 @@ Only after Phase 7 is fully green:
 
 EXECUTION.md MUST be complete — no placeholders, no `[TBD]`, no `TODO`. Standalone: readable without this conversation.
 
+**Compactness check (before confirm).** Every empty / trivial / off-scope
+section is cut (not kept with a placeholder). Remaining sections pass the caps
+in `../_shared/artifact-compactness.md`. Cutting more would remove information,
+not just words. Micro-spec stays only in RAW mode; findings triage stays only
+in FIX / REFACTOR mode; regression + behaviour-preservation blocks stay only
+in BUG / FIX / REFACTOR mode. If the check fails, trim and re-run.
+
 ### Transition
 
 After writing, stop. Do NOT `git push`. Do NOT open a PR. Do NOT invoke other skills.

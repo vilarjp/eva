@@ -318,6 +318,7 @@ Before Gate, emit with `✓` or `✗` on each line:
 - [ ] No PR comment was posted by the skill
 - [ ] `CODE-REVIEW.md` / plan docs were read-only
 - [ ] No `TODO`, `[TBD]`, placeholder text in the proposed artifact
+- [ ] **Compactness check** — every empty / trivial / off-scope section is cut (not kept with a placeholder). Remaining sections pass the caps in `../_shared/artifact-compactness.md`. Cutting more would remove information, not just words.
 
 If any check fails → STOP, fix, re-emit. Do not proceed with any `✗` unresolved.
 

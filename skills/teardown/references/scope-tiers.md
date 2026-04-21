@@ -35,6 +35,11 @@ Is the target obfuscated, >500 KB, multi-bundle, or WASM?           → Deep
 - "It looks small" is not the same as "it is simple." If reading reveals hidden global state or a tangled call graph, promote to Standard.
 - Do not skip the Unknowns section even on Lightweight — something is always elided.
 
+**Exit signal:** a TEARDOWN.md under ~95 filled lines. No module layout (not
+bundled), no diagram, condensed inventories. Focus slice, References,
+Relationship sections cut unless active. Follow the trimmed
+`templates/TEARDOWN.md` verbatim — see `_shared/artifact-compactness.md`.
+
 ## Tier: Standard
 
 **Signals:**

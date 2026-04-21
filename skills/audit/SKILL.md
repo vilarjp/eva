@@ -185,6 +185,7 @@ Before Gate, emit with `✓` / `✗` on each line:
 - [ ] P1 count ≤ 10 for Standard / ≤ 20 for Deep — if higher, re-calibrated
 - [ ] No source file was edited; no commit or push was made
 - [ ] No `TODO`, `[TBD]`, placeholder text in the proposed artifact
+- [ ] **Compactness check** — every empty / trivial / off-scope section is cut (not kept with a placeholder). Remaining sections pass the caps in `../_shared/artifact-compactness.md`. Cutting more would remove information, not just words.
 
 If any `✗` → STOP, fix, re-emit. Do not advance.
 

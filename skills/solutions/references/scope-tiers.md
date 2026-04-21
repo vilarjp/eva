@@ -33,6 +33,11 @@ Any upstream artifact Deep (concurrency / distributed / integration / architectu
 - "Lightweight means skip the Iron Law." No. Phrase even a trivial gotcha as behaviour, not `src/foo.ts:42`. The file will be renamed next quarter.
 - "No gotchas, no decisions, skip the doc." If the pipeline produced artifacts at all, there are decisions in SPEC mini-ADRs and concerns in EXECUTION. Write it.
 
+**Exit signal:** a SOLUTIONS.md under ~55 filled lines. Diagram and
+Relationship-to-Original-Spec sections cut. Gotchas / What-Didn't-Work /
+Prevention cut if they'd be empty. Follow the trimmed
+`templates/SOLUTIONS.md` verbatim — see `_shared/artifact-compactness.md`.
+
 ## Tier: Standard
 
 **Signals (inherited):**

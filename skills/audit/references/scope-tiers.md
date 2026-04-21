@@ -42,6 +42,12 @@ If the target touches concurrency, auth, payments, migrations, or public APIs �
 - "It's just a utility file" does not mean it is clean. Read the call sites — a utility with wide fanout amplifies any smell.
 - Lightweight does not mean *"skip smells"*. It means *"survey one file honestly, write one short artifact"*.
 
+**Exit signal:** an AUDIT.md under ~80 filled lines. Architecture observations
+cut unless a cross-cutting shape emerged; Target inventory cut unless the
+scope is genuinely ambiguous; Suppressed candidates cut if empty. Follow the
+trimmed `templates/AUDIT.md` verbatim — see
+`_shared/artifact-compactness.md`.
+
 ---
 
 ## Tier: Standard

@@ -349,6 +349,7 @@ Before Gate, emit with `✓` or `✗` on each line:
 - [ ] Phase 6.9 Lead adjudication ran; every reshaping decision (downgrade / upgrade / reject / merge) carries a one-line rationale tied to evidence, `seen_by`, plan anchor, adversarial lens, or claim-mismatch status
 - [ ] No `TODO`, `[TBD]`, placeholder text in the proposed artifact
 - [ ] No code was edited, staged, committed, or pushed by the skill
+- [ ] **Compactness check** — every empty / trivial / off-scope section is cut (not kept with a placeholder). Remaining sections pass the caps in `../_shared/artifact-compactness.md`. Cutting more would remove information, not just words.
 
 If any check fails → STOP, fix, re-emit. Do not proceed with any `✗` unresolved.
 

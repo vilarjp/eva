@@ -36,6 +36,11 @@ Single file, pattern already exists, no data-model change, no concurrency?     �
 - "It looks trivial" ≠ "it is trivial." If the pre-scan surfaces something surprising, promote to Standard.
 - Do not skip the reproduction test for a one-liner bug fix. Every regression is a good regression test.
 
+**Exit signal:** an EXECUTION.md under ~115 filled lines. Findings triage
+sections cut unless FIX/REFACTOR mode; per-slice details inline under one
+shared heading; micro-spec cut unless RAW mode. Follow the trimmed
+`templates/EXECUTION.md` verbatim — see `_shared/artifact-compactness.md`.
+
 ## Standard
 
 **Signals:**

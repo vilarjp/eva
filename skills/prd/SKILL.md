@@ -183,6 +183,7 @@ Before writing the file, emit this checklist to the user with `✓` or `✗` on 
 - [ ] Open questions are tagged `now` vs `during-build`
 - [ ] No placeholder text or `[TBD]` markers
 - [ ] Complexity tier matches scope classification
+- [ ] **Compactness check** — every empty / trivial / off-scope section is cut (not kept with a placeholder). Remaining sections pass the caps in `_shared/artifact-compactness.md`. Cutting more would remove information, not just words.
 
 If any check fails → STOP, fix, re-emit. Do not proceed with any `✗` unresolved.
 

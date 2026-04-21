@@ -41,7 +41,9 @@ If either doc lacks a `complexity:` frontmatter field, fall back to these heuris
 - Phase 4 (classify): most findings will be P2 or P3.
 - Phase 5 (self-review): full checklist; can pass quickly if the pair is clean.
 
-**Exit signal:** a compact REVISION.md with 0–4 findings, emitted in under 5 user turns.
+**Exit signal:** a REVISION.md under ~65 filled lines with 0-4 findings,
+emitted in under 5 user turns. No dispatched adversarial agent (fill the
+inline adversarial row instead); optional sections cut entirely.
 
 ## Standard
 
@@ -119,6 +121,10 @@ Single-doc mode (only PRD.md or only SPEC.md present) always runs at the tier of
 
 ## When in doubt
 
-- Between Lightweight and Standard → **Standard**. The overhead is small. Under-revising a real feature is worse than over-revising a simple one.
-- Between Standard and Deep → ask one disambiguating question about blast radius in Phase 1.
-- Never classify as Lightweight just to avoid the work. The rubric must match the pair's real risk.
+- **Default to Lightweight** when the inherited MAX says Lightweight — don't
+  upgrade speculatively. A short REVISION for a short pair is the right
+  artifact; see `_shared/artifact-compactness.md`.
+- Between Standard and Deep → ask one disambiguating question about blast
+  radius in Phase 1.
+- The rubric must match the pair's real risk — never upgrade the tier to look
+  thorough, never downgrade to avoid the work.

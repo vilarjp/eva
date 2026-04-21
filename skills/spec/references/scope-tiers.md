@@ -21,7 +21,10 @@ If a PRD is in context, the PRD's complexity tier is a strong prior, not a manda
 - Phase 8 (diagram): skip unless the user asks.
 - Phase 9 (red-team): run it but expect short output — it's fine to end a role with "no material concern."
 
-**Exit signal:** a 1-2 page SPEC in under 6 user turns.
+**Exit signal:** a SPEC under ~85 filled lines in under 6 user turns. No
+diagram, no adversarial appendix, optional sections cut entirely. The trimmed
+`templates/SPEC.md` *is* the Lightweight shape — follow it verbatim, don't
+add sections.
 
 ## Standard
 
@@ -66,9 +69,16 @@ If a PRD is in context, the PRD's complexity tier is a strong prior, not a manda
 
 ## When in doubt
 
-- Between Lightweight and Standard → **Standard**. The overhead is small. Downgrading later is free; upgrading in the middle loses momentum.
-- Between Standard and Deep → ask ONE disambiguating question about blast radius (e.g. "Will this change the public API shape or require a DB migration?") before committing.
-- Never classify as Lightweight just to avoid the work. If the scope is genuinely Lightweight, the output will naturally be short.
+- **Default to Lightweight** when the upstream signal is small — a one-file
+  change, a clear pattern already in the codebase, no cross-module
+  coordination. Lightweight is the real floor; Standard is earned by multiple
+  modules, schema change, public API shape, or one real decision.
+- Between Standard and Deep → ask ONE disambiguating question about blast
+  radius (e.g. "Will this change the public API shape or require a DB
+  migration?") before committing.
+- Never classify as Standard to look thorough. A short SPEC for a bounded
+  problem is the right artifact — see `_shared/artifact-compactness.md` and
+  `references/anti-bloat.md`.
 
 ## Re-classification mid-process
 
